@@ -1,7 +1,7 @@
 ---
 title: "Introduction to Tidyverse"
 tutorial:
-  version: 1.0
+  version: 1.1
 output: 
   learnr::tutorial:
     progressive: true
@@ -28,8 +28,9 @@ In R there are many add on packages, a.k.a. `libraries`.  Tidyverse is one such 
 ```{r load-tidyverse, exercise=TRUE}
 library(tidyverse)
 ```
+(no output will be generated)
 
-## tibbles
+## Tibbles
 
 Optional reading: [tibbles](http://r4ds.had.co.nz/tibbles.html) in _R for Data Science_
 
@@ -72,17 +73,11 @@ Explanation of column headings:
 * species: species of plant
 * who: who measured the plants
 
-## data transformation
-
-The _TidyVerse_ contains convenient functions for data manipulation.
-
-
-
-### filter data with `filter()`
+## Filter data with `filter()`
 
 The `tomato` data set contains data from five species.  We can see their names with:
 
-```{r, echo=TRUE, exercise=TRUE}
+```{r unique, echo=TRUE, exercise=TRUE}
 unique(tomato$species)
 ```
 
@@ -94,14 +89,15 @@ Spen.data <- filter(tomato,species == "S. pennellii")
 
 The first argument is the data object that we want to work on, and the second argument is a logical statement describing how we want to filter.
 
-How many rows were in the original data set and how many are in your filtered data set?
+How many rows were in the original data set and how many are in your filtered data set?  Add additional lines to the code below to answer this question
 
 ```{r filtered-row, exercise=TRUE}
+Spen.data <- filter(tomato,species == "S. pennellii")
 
 ```
 
 
-There were two researchers that measured the data.  Perhaps we only trust the data gathered by one researcher.  Find the names of the researchers and then filter to only keep the data measured by the second researcher in the list.
+There were two researchers that measured the data.  Perhaps we only trust the data gathered by one researcher.  Find the names of the researchers and then filter to only keep the data measured by the second researcher in the list.  How can you confirm that your filtering worked and that only one researcher is contained in the new data set?
 
 ```{r filter-researcher, exercise=TRUE}
 
@@ -116,9 +112,9 @@ Try creating a new data set that consists of only _S. chilense_ samples gathered
 
 ```
 
-Want more info? see [filter](http://r4ds.had.co.nz/transform.html#filter-rows-with-filter) in R 4 data science.
+Want more info? See [filter in R 4 Data Science](http://r4ds.had.co.nz/transform.html#filter-rows-with-filter).
 
-### Select columns with `select()`
+## Select columns with `select()`
 
 The tomato data set has 23 data columns, and you may not care about all of them.  We can use `select()` to select particular columns
 
@@ -139,29 +135,33 @@ So, if we want to have the "who" column first, then...
 select(tomato,who,everything())
 ```
 
-Practice by using select to create a new tibble that only has the hypcotyl and internade date along with species, accession, and trt.
+Practice by using select to create a new tibble that only has the hypcotyl and internode data, along with species, accession, and trt.
 
 ```{r select4, exercise=TRUE}
 
 ```
 
 
-Want more info? See [select](http://r4ds.had.co.nz/transform.html#select-columns-with-select) in R 4 data science.
+Want more info? See [select in R 4 Data Science](http://r4ds.had.co.nz/transform.html#select-columns-with-select).
 
 
-### Combine commands using pipes
+## Combine commands using pipes
 
 You will remember the pipe `|` operator in Linux that takes the output from one command and "pipes" it into another command.  The R Tidyverse has a similar operator, although it is written as `%>%`.  (Technically this comes from the  package `magrittr` (get the pun?))
 
-Want more info? See [pipes](http://r4ds.had.co.nz/pipes.html) in R 4 data science.
+Want more info? See [pipes in R 4 Data Science](http://r4ds.had.co.nz/pipes.html).
 
 So if we want to use filter to keep data collected by Dan and then select to only keep species, accession, who, trt, and leaf data we could do it like so:
 
 ```{r pipe1, exercise=TRUE}
-Dan_leaf_data <- tomato %>% #start with the tomato data; pipe it to the next command.  final results will go into Dan_leaf_data
+Dan_leaf_data <- tomato %>% #start with the tomato data; 
+                            #pipe it to the next command (filter).  
+                            #final results will go into Dan_leaf_data
   filter(who=="Dan") %>%
   select(species, acs, who, trt, starts_with("leaf")) # note use of "starts_with!"
+
 Dan_leaf_data  
+
 ```
 
 Note that we no longer have to give the "tomato" argument to filter or select, pipe is taking care of that first argument for us.
@@ -173,21 +173,21 @@ Now try it yourself, selecting the hypocotyl data measured by Pepe from the "H" 
 ```
 
 
-Want more info? see [pipes](http://r4ds.had.co.nz/pipes.html) in R 4 data science.
+Want more info? See [pipes in R 4 Data Science](http://r4ds.had.co.nz/pipes.html).
 
-### Arrange data with `arrange()`
+## Arrange data with `arrange()`
 
 The `arrange()` function allows you to sort your data based on the column(s) of your choice:
 
 if we want to sort by hypocotyl length:
 ```{r arrange1, exercise=TRUE}
-arrange(tomato,hyp)
+tomato %>% arrange(hyp)
 ```
 
 By default `arrange` will sort from lowest to highest.  if you want to go from highest to lowest, then add `desc`
 
 ```{r arrange2, exercise=TRUE}
-arrange(tomato, desc(hyp))
+tomato %>% arrange(desc(hyp))
 ```
 
 You can sort on multiple columns by providing multiple arugments to `arrange`.  Try sorting by both accession (acs) and hyp.  How does changing the order of the arguments to `arrange` affect the results? Try it both ways.
@@ -205,9 +205,9 @@ Pepe_long_hyps <- tomato %>%
   ______(alt)
 ```
 
-Want more info? see [arrange](http://r4ds.had.co.nz/transform.html#arrange-rows-with-arrange) in R 4 data science.
+Want more info? See [arrange in R 4 Data Science](http://r4ds.had.co.nz/transform.html#arrange-rows-with-arrange).
 
-### Create new columns with `mutate()`
+## Create new columns with `mutate()`
 
 If you want to add a new column to your data set, one way to do so is with mutate.  For example, if we wanted a column that represented the leaf length to width ratio:
 
@@ -222,10 +222,10 @@ Use mutate to make a new column that represents the total stem length of the pla
 
 ```
 
-Want more info? see [mutate](http://r4ds.had.co.nz/transform.html#add-new-variables-with-mutate) in R 4 data science.
+Want more info? See [mutate in R 4 Data Science](http://r4ds.had.co.nz/transform.html#add-new-variables-with-mutate).
 
 
-### Create summaries with `summarize()`
+## Create summaries with `summarize()`
 
 Tidyverse functions also provide an easy way to summarize your data.
 
@@ -263,6 +263,8 @@ calculate the median altitude of each species, then pipe the results into arrang
 
 ```
 
+## End
 
+Congratulations, you have reached the end of this tutorial.
 
 
