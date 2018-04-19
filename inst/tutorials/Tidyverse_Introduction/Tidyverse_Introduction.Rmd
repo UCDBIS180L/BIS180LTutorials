@@ -198,6 +198,8 @@ You can sort on multiple columns by providing multiple arugments to `arrange`.  
 
 Now fill in the blanks the code below to create a new data set that contains data gathered by Pepe, sorted by altitude (alt) and containing the who, trt, species, acs, hyp, and alt columns.
 
+Also you will need to fix an error in the code before this runs.
+
 ```{r arrange4, exercise=TRUE, eval=FALSE}
 Pepe_long_hyps <- tomato %>%
   ______(who==Pepe) %>% 
