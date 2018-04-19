@@ -1,0 +1,268 @@
+---
+title: "Introduction to Tidyverse"
+tutorial:
+  version: 1.0
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+tomato <- read_csv("www/Tomato.csv")
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Welcome to the TidyVerse
+
+The goal of this tutorial is to introduce the [tidyverse](https://www.tidyverse.org/) a series of R packages that make data manipulation and processing easier.  While most of what is covered here _could_ be accomplished using base R functions, the _tidy_ functions make things easier and more clear.
+
+The material covered here is also explained in greater detail in the course textbook [_R for Data Science_](http://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemund.  I encourage you to use that book for clarification or greater depth.  It is free online.
+
+In R there are many add on packages, a.k.a. `libraries`.  Tidyverse is one such package.  We use the `library()` command to load a library for use in our current R session.  `library()` takes the package name as an argument.  Use `library` to load the `tidyverse` package using the window below.
+
+
+```{r load-tidyverse, exercise=TRUE}
+library(tidyverse)
+```
+
+## tibbles
+
+Optional reading: [tibbles](http://r4ds.had.co.nz/tibbles.html) in _R for Data Science_
+
+You were previously introduced to  `data.frame` objects as spreadsheet-like objects that are useful for handling data in R.  Tidyverse has a related data type, the `tibble`.  Details of the differences aren't important right now, but if you are already an R afficiando and are curious you can read about them in the  [tibbles](http://r4ds.had.co.nz/tibbles.html) chapter in _R for Data Science_
+
+To import data into R as a tibble it is convenient to have it saved as a [comma separated value (csv) file](https://en.wikipedia.org/wiki/Comma-separated_values).  For the rest of this tutorial we will work with a dataset of tomato measurements in the file `Tomato.csv`
+
+We import the data using the `read_csv()` function.  If you have used R before, please note that this is a different function than `read.csv()`.  `read_csv()` created a tibble upon import instead of a data frame.
+
+We will use data from a pilot experiment measuring the growth of various wild tomato accessions and species under different light conditions.  The `Tomato.csv` file is included in your `Assignment 3` repository that you cloned from github.  Modify the path below so that the file is imported.
+
+```{r data_import, exercise=TRUE, eval=FALSE}
+tomato <- read_csv("Tomato.csv")
+```
+
+Now use the `head` function to take a look at the imported data
+
+```{r look-at-tomato, exercise=TRUE}
+
+```
+
+
+Explanation of column headings:
+
+* shelf, flat, col, row: information about where each plant was grown
+* acs: the accession number for that strain
+* trt: "H" is light with a high red:far\-red ratio; simulated sun.  "L" is light with a low red:far\- red ratio; simulated plant shade.
+* days: days since germination
+* date: date of measurement
+* hyp: hypocotyl length (embryonic stem)
+* int1-int4: individual internode lengths. Internodes are stem segments
+* leafnum: which leaf was measured
+* petleng: petiole length
+* leafleng: leaf length
+* leafwid: leaf width
+* ndvi: a measure of plant vegetation density
+* lat: latitude of origin
+* long: longitude of origin
+* alt: altitude of origin
+* species: species of plant
+* who: who measured the plants
+
+## data transformation
+
+The _TidyVerse_ contains convenient functions for data manipulation.
+
+
+
+### filter data with `filter()`
+
+The `tomato` data set contains data from five species.  We can see their names with:
+
+```{r, echo=TRUE, exercise=TRUE}
+unique(tomato$species)
+```
+
+Suppose that we only want to look at the data from one of these, _S. pennellii_.  We can use the `filter` function to specify exactly that:
+
+```{r filter1, exercise=TRUE}
+Spen.data <- filter(tomato,species == "S. pennellii")
+```
+
+The first argument is the data object that we want to work on, and the second argument is a logical statement describing how we want to filter.
+
+How many rows were in the original data set and how many are in your filtered data set?
+
+```{r filtered-row, exercise=TRUE}
+
+```
+
+
+There were two researchers that measured the data.  Perhaps we only trust the data gathered by one researcher.  Find the names of the researchers and then filter to only keep the data measured by the second researcher in the list.
+
+```{r filter-researcher, exercise=TRUE}
+
+```
+
+
+You can provide multiple test arguments to `filter()` and all must evaluate to true for a row to be selected.
+
+Try creating a new data set that consists of only _S. chilense_ samples gathered from altitude greater than 2500 meters.
+
+```{r filter-species-altitude, exercise=TRUE}
+
+```
+
+Want more info? see [filter](http://r4ds.had.co.nz/transform.html#filter-rows-with-filter) in R 4 data science.
+
+### Select columns with `select()`
+
+The tomato data set has 23 data columns, and you may not care about all of them.  We can use `select()` to select particular columns
+
+```{r seelct1, exercise=TRUE}
+select(tomato, species, hyp) 
+```
+
+If we use a minus sign `-` in front of a variable name then `select` will select everything except for that variable name:
+
+```{r select2, exercise=TRUE}
+select(tomato, -shelf, -flat, -col, -row) #remove position information
+```
+
+Select can also be used to rearrange the column order.  Combine with `everything()` so that you don't have to type them all.
+
+So, if we want to have the "who" column first, then...
+```{r select3, exercise=TRUE}
+select(tomato,who,everything())
+```
+
+Practice by using select to create a new tibble that only has the hypcotyl and internade date along with species, accession, and trt.
+
+```{r select4, exercise=TRUE}
+
+```
+
+
+Want more info? See [select](http://r4ds.had.co.nz/transform.html#select-columns-with-select) in R 4 data science.
+
+
+### Combine commands using pipes
+
+You will remember the pipe `|` operator in Linux that takes the output from one command and "pipes" it into another command.  The R Tidyverse has a similar operator, although it is written as `%>%`.  (Technically this comes from the  package `magrittr` (get the pun?))
+
+Want more info? See [pipes](http://r4ds.had.co.nz/pipes.html) in R 4 data science.
+
+So if we want to use filter to keep data collected by Dan and then select to only keep species, accession, who, trt, and leaf data we could do it like so:
+
+```{r pipe1, exercise=TRUE}
+Dan_leaf_data <- tomato %>% #start with the tomato data; pipe it to the next command.  final results will go into Dan_leaf_data
+  filter(who=="Dan") %>%
+  select(species, acs, who, trt, starts_with("leaf")) # note use of "starts_with!"
+Dan_leaf_data  
+```
+
+Note that we no longer have to give the "tomato" argument to filter or select, pipe is taking care of that first argument for us.
+
+Now try it yourself, selecting the hypocotyl data measured by Pepe from the "H" trt.
+
+```{r pipe2, exercise=TRUE}
+
+```
+
+
+Want more info? see [pipes](http://r4ds.had.co.nz/pipes.html) in R 4 data science.
+
+### Arrange data with `arrange()`
+
+The `arrange()` function allows you to sort your data based on the column(s) of your choice:
+
+if we want to sort by hypocotyl length:
+```{r arrange1, exercise=TRUE}
+arrange(tomato,hyp)
+```
+
+By default `arrange` will sort from lowest to highest.  if you want to go from highest to lowest, then add `desc`
+
+```{r arrange2, exercise=TRUE}
+arrange(tomato, desc(hyp))
+```
+
+You can sort on multiple columns by providing multiple arugments to `arrange`.  Try sorting by both accession (acs) and hyp.  How does changing the order of the arguments to `arrange` affect the results? Try it both ways.
+
+```{r arrange3, exercise=TRUE}
+
+```
+
+Now fill in the blanks the code below to create a new data set that contains data gathered by Pepe, sorted by altitude (alt) and containing the who, trt, species, acs, hyp, and alt columns.
+
+```{r arrange4, exercise=TRUE, eval=FALSE}
+Pepe_long_hyps <- tomato %>%
+  ______(who==Pepe) %>% 
+  ______(who, trt, species, acs, hyp, alt) %>%
+  ______(alt)
+```
+
+Want more info? see [arrange](http://r4ds.had.co.nz/transform.html#arrange-rows-with-arrange) in R 4 data science.
+
+### Create new columns with `mutate()`
+
+If you want to add a new column to your data set, one way to do so is with mutate.  For example, if we wanted a column that represented the leaf length to width ratio:
+
+```{r mutate1, exercise=TRUE}
+tomato_lw <- tomato %>%  mutate(lw=leafleng/leafwid)
+tomato_lw %>% select(leafleng,leafwid,lw, everything())
+```
+
+Use mutate to make a new column that represents the total stem length of the plant (hypocotyl + all internodes).
+
+```{r mutate2, exercise=TRUE}
+
+```
+
+Want more info? see [mutate](http://r4ds.had.co.nz/transform.html#add-new-variables-with-mutate) in R 4 data science.
+
+
+### Create summaries with `summarize()`
+
+Tidyverse functions also provide an easy way to summarize your data.
+
+We first tell R what groups we are interested in summarizing (using `group_by()`, and then how we want it summarized (`summarize()`).
+
+For example, if we wanted the mean hypocotyl length of each species, then:
+
+```{r summarize1, exercise=TRUE}
+tomato %>%
+  group_by(species) %>% #want to compute something for each species
+  summarize(hyp.mean=mean(hyp)) #hyp.mean is what the new summary will be called 
+```
+
+We can group by multiple factors:
+```{r summarize2, exercise=TRUE}
+tomato %>%
+  group_by(species,trt) %>%
+  summarize(hyp.mean=mean(hyp))
+```
+
+Also we can create multiple summary columns, and, of course, the results can be stored in a new object
+
+```{r summarize3, exercise=TRUE}
+hyp.summary <- tomato %>%
+  group_by(species,trt) %>%
+  summarize(hyp.mean=mean(hyp), hyp.sd=sd(hyp))
+hyp.summary
+```
+
+Your turn...
+
+calculate the median altitude of each species, then pipe the results into arrange to sort by altitude.  Which species comes from the highest altitude?
+
+```{r summarize4, exercise=TRUE}
+
+```
+
+
+
+

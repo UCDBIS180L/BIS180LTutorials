@@ -1,0 +1,10 @@
+Package: BIS180LTutorials
+Type: Package
+Title: R Tutorials for BIS180:
+Version: 0.1.0
+Author: Julin Maloof
+Maintainer: Julin Maloof <jnmloof@ucdavis.edu>
+Description: A series of learnr-based tutorials for students in BIS180L
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
