@@ -1,0 +1,37 @@
+---
+title: "create_join_data"
+author: "Julin N Maloof"
+date: "4/19/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## get data
+
+```{r}
+data <- read_csv("~/git/Brapa_microbes/Annotation/output/Brapa_V2.5_annotated.csv")
+```
+
+```{r}
+head(data)
+data <- data %>% filter(!is.na(At_description))
+```
+
+```{r}
+data <- data[1:1000,]
+```
+
+```{r}
+gene.info <- data[-1:-6,] %>% select(name,chrom,start,end)
+blast.info <- data %>% select(Br.name=name, At.name=AGI, perc_ID,eval) %>% filter(rep(c(TRUE,FALSE),500))
+At.info <- data %>% select(AGI,At_description)%>% filter(rep(c(TRUE,FALSE),500))
+```
+
+```{r}
+save(gene.info,blast.info,At.info, file="join_demo.Rdata")
+```
+

@@ -1,0 +1,118 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+knitr::opts_chunk$set(echo = FALSE)
+load("www/join_demo.Rdata")
+starwars.biodata <- starwars %>% select(name:eye_color)
+starwars.species <- starwars %>% select(name,species)
+starwars.home <- starwars %>% select(givenName=name,homeworld)
+starwars.species <- starwars.species[-c(1,3,5),]
+starwars.home <- starwars.home[-c(2,4,6),]
+```
+
+## Joining data sets
+
+Often we will have different data sets that need to be combined.
+
+For example we have three different data sets on Star Wars characters:
+
+```{r dataview, exercise=TRUE}
+head(starwars.biodata)
+head(starwars.species)
+head(starwars.home)
+```
+
+How do we combine these data sets?  We CANNOT just cbind them together because the names are not in the same order and not all data sets are complete.
+
+We want to _join_ them by a common _key_.  In this case we can use the character's name as a key.
+
+## Type of joins
+
+The `dplyr` package in the `tidyverse` provides us with a number of join functions, four of which will be discussed here.
+
+We choose a function based on how we want non-matching keys to be handled.
+
+### Inner Join
+
+`inner_join()` only keeps rows where the key is present in both data sets
+
+```{r inner, exercise=TRUE}
+starwars.bio.species <- inner_join(starwars.biodata,starwars.species)
+starwars.bio.species
+```
+
+### Left Join
+
+`left_join()` keeps all rows from the left data set and keeps rows from the right data set where there is a key that matches the left.  Rows with non-matching keys in the right data set are discarded.
+
+```{r left, exercise=TRUE}
+starwars.bio.species <- left_join(starwars.biodata,starwars.species)
+starwars.bio.species
+```
+
+There is an analogous `right_join`
+
+### Full join.
+
+`full_join()` keeps all rows from left or right, regardless of whether or not there is a matching key.
+
+```{r full, exercise=TRUE}
+starwars.bio.species <- full_join(starwars.biodata,starwars.species)
+starwars.bio.species
+```
+
+## Specifying keys
+
+By default data sets are joined by using all columns that have the same name in the two data sets.  You can specify a particular column by using the `by` argument.  Or, if the columns have different names in the two data sets you can specify the equivalency as shown here:
+
+```{r by, exercise = TRUE}
+starwars.species
+starwars.home #oops different columns names for the key!
+
+starwars.species.home <- left_join(starwars.species, starwars.home, by=c("name"="givenName"))
+
+starwars.species.home
+```
+
+## Practice
+
+We have three data sets containing information on _Brassica rapa_ genes that have been BLASTED agains _Arabidopsis thaliana_ to do a rough annotation.
+
+* `gene.info` has information on the genomic location of the _B. rapa_ gene.
+* `blast.info` has info on the best hit when the _B. rapa_ gene was BLASTED again _Arabidopsis_
+* `At.info` has information on Arabidopsis gene function.
+
+### Examine the data sets
+
+First use `head` to take a look a each of the three data sets.
+```{r head, exercise=TRUE}
+
+```
+
+
+### Practice 1
+
+Create a new data frame that has information on the best BLAST hit for each Brassica gene.  Keep all of the Brassica genes in `gene.info` even if they don't have information in the `blast.info` data frame.  Discard any `blast.info` rows that are not matched in `gene.info`.
+
+```{r practice1, exercise=TRUE}
+
+```
+
+
+### Practice 2
+
+Repeat what you did above, but now do an additional join to add in the A.t. gene info.  Only keep rows where there is a matching entry in both data frame.
+
+```{r practice2, exercise=TRUE}
+
+```
+
+## End
+
+This has been a brief intro to joining.  It is a pretty complex topic, for more info, see [Relational Data in the R for Data Science book](http://r4ds.had.co.nz/relational-data.html)
