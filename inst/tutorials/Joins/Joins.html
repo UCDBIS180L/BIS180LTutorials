@@ -61,11 +61,12 @@ head(starwars.home)</code></pre>
 <h2>Type of joins</h2>
 <p>The <code>dplyr</code> package in the <code>tidyverse</code> provides us with a number of join functions, four of which will be discussed here.</p>
 <p>We choose a function based on how we want non-matching keys to be handled.</p>
+<p>In each of these functions the first two arguments are the tables that we want to join and the third argument species which column(s) contain the keys</p>
 <div id="section-inner-join" class="section level3">
 <h3>Inner Join</h3>
 <p><code>inner_join()</code> only keeps rows where the key is present in both data sets</p>
 <div class="tutorial-exercise" data-label="inner" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
-<pre class="text"><code>starwars.bio.species &lt;- inner_join(starwars.biodata,starwars.species)
+<pre class="text"><code>starwars.bio.species &lt;- inner_join(starwars.biodata,starwars.species, by = &quot;name&quot;)
 starwars.bio.species</code></pre>
 <script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
 </div>
@@ -74,7 +75,7 @@ starwars.bio.species</code></pre>
 <h3>Left Join</h3>
 <p><code>left_join()</code> keeps all rows from the left data set and keeps rows from the right data set where there is a key that matches the left. Rows with non-matching keys in the right data set are discarded.</p>
 <div class="tutorial-exercise" data-label="left" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
-<pre class="text"><code>starwars.bio.species &lt;- left_join(starwars.biodata,starwars.species)
+<pre class="text"><code>starwars.bio.species &lt;- left_join(starwars.biodata,starwars.species, by = &quot;name&quot;)
 starwars.bio.species</code></pre>
 <script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
 </div>
@@ -84,7 +85,7 @@ starwars.bio.species</code></pre>
 <h3>Full join.</h3>
 <p><code>full_join()</code> keeps all rows from left or right, regardless of whether or not there is a matching key.</p>
 <div class="tutorial-exercise" data-label="full" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
-<pre class="text"><code>starwars.bio.species &lt;- full_join(starwars.biodata,starwars.species)
+<pre class="text"><code>starwars.bio.species &lt;- full_join(starwars.biodata,starwars.species, by = &quot;name&quot;)
 starwars.bio.species</code></pre>
 <script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
 </div>
@@ -92,7 +93,7 @@ starwars.bio.species</code></pre>
 </div>
 <div id="section-specifying-keys" class="section level2">
 <h2>Specifying keys</h2>
-<p>By default data sets are joined by using all columns that have the same name in the two data sets. You can specify a particular column by using the <code>by</code> argument. Or, if the columns have different names in the two data sets you can specify the equivalency as shown here:</p>
+<p>What if the key columns have different names in the two data sets? you can specify the equivalency as shown here:</p>
 <div class="tutorial-exercise" data-label="by" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>starwars.species
 starwars.home #oops different columns names for the key!

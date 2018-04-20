@@ -38,12 +38,14 @@ The `dplyr` package in the `tidyverse` provides us with a number of join functio
 
 We choose a function based on how we want non-matching keys to be handled.
 
+In each of these functions the first two arguments are the tables that we want to join and the third argument species which column(s) contain the keys
+
 ### Inner Join
 
 `inner_join()` only keeps rows where the key is present in both data sets
 
 ```{r inner, exercise=TRUE}
-starwars.bio.species <- inner_join(starwars.biodata,starwars.species)
+starwars.bio.species <- inner_join(starwars.biodata,starwars.species, by = "name")
 starwars.bio.species
 ```
 
@@ -52,7 +54,7 @@ starwars.bio.species
 `left_join()` keeps all rows from the left data set and keeps rows from the right data set where there is a key that matches the left.  Rows with non-matching keys in the right data set are discarded.
 
 ```{r left, exercise=TRUE}
-starwars.bio.species <- left_join(starwars.biodata,starwars.species)
+starwars.bio.species <- left_join(starwars.biodata,starwars.species, by = "name")
 starwars.bio.species
 ```
 
@@ -63,13 +65,13 @@ There is an analogous `right_join`
 `full_join()` keeps all rows from left or right, regardless of whether or not there is a matching key.
 
 ```{r full, exercise=TRUE}
-starwars.bio.species <- full_join(starwars.biodata,starwars.species)
+starwars.bio.species <- full_join(starwars.biodata,starwars.species, by = "name")
 starwars.bio.species
 ```
 
 ## Specifying keys
 
-By default data sets are joined by using all columns that have the same name in the two data sets.  You can specify a particular column by using the `by` argument.  Or, if the columns have different names in the two data sets you can specify the equivalency as shown here:
+What if the key columns have different names in the two data sets? you can specify the equivalency as shown here:
 
 ```{r by, exercise = TRUE}
 starwars.species
