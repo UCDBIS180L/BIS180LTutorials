@@ -371,8 +371,39 @@ int3.mean.sem %>% ggplot(aes(x=trt,
 
 There are several more geoms available.  You can [check the docs](http://ggplot2.tidyverse.org/reference/#section-layer-geoms) to see a listing.
 
-
 ## Scales
+
+ggplot does a nice job of automatically defining the scales, but what if you want something different?  we add a call to a `scale()` function.
+
+Consider this bar chart again:
+
+```{r}
+int3.mean.sem %>% ggplot(aes(x=species, y = mean, fill=trt, ymax=mean+sem, ymin=mean-sem)) +
+  geom_col(position="dodge") +
+  geom_errorbar(position = position_dodge(width=0.9), width=.5)
+```
+
+What if we want the fill colors to be something else?  We use `scale_fill_manual()`
+
+```{r scale-discrete, exercise=TRUE}
+int3.mean.sem %>% ggplot(aes(x=species, y = mean, fill=trt, ymax=mean+sem, ymin=mean-sem)) +
+  geom_col(position="dodge") +
+  geom_errorbar(position = position_dodge(width=0.9), width=.5) +
+  scale_fill_manual(values = c("H"="darkblue","L"="red"))
+```
+
+Note: you can get a list of possible colors with `colors()`
+
+Change the colors in the plot below so that Dan and Pepe are different from the defaults.  You can choose colors of your liking:
+
+```{r scale-discrete2, exercise=TRUE}
+tomato %>% ggplot(aes(x=species, y = hyp, fill=who)) +
+  geom_violin()
+```
+
+Most aesthetics have similar scale commands that allow you to adjust how they are used.  See [scales](http://ggplot2.tidyverse.org/reference/#section-scales) 
+
+A particular useful one is `scale_y_log10()` that transforms the y-axis scale (there is an equivalent `scale_x_log10()`
 
 ## Facets
 
