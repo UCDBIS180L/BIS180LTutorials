@@ -88,6 +88,8 @@ tomato %>% ggplot(mapping = aes(x=petleng,y=leafleng)) +
   geom_point()
 ```
 
+
+
 ## Aesthetics
 
 In this section we will explore aesthetics.  As noted above, aesthetics control the relationship between your data and plot elements.
@@ -111,13 +113,106 @@ Create a plot of int3 vs int4 where color indicates trt, and shape indicates who
 
 ```
 
+### size
 
+The `size` aesthetic controls the size of the plotted points.
 
+To practice, create a plot of latitude vs longitude where altitude is indicated by the size of the point and species is indicated by color
 
+```{r size, exercise = TRUE}
+
+```
+
+### more aesthetics
+
+There are many more aesthetics available, depending on the geom used.  Some of these will be introduced as you learn about additional geoms.
 
 ## Geoms
 
+Geoms control the type of plot that is made.  You have already seen one geom, `geom_point`.
+
+### geom_smooth
+
+
+
+### geom_histogram() and geom_density()
+
+`geom_histogram()` creates histograms.  For histograms, values for the y-axis are calculated for you, so we just provide a x aesthetic:
+
+```{r geom_hist1, exercise=TRUE}
+tomato %>% ggplot(aes(x=hyp)) +
+  geom_histogram()
+```
+
+Density plots are related to histograms. The relevant geom is `geom_density()`.  Make a density plot below:
+```{r geom_density, exercise=TRUE}
+
+```
+
+How would you describe the difference between a density plot and a histogram?
+
+### geom_boxplot() and geom_violin()
+
+Boxplots and violin plots are provide quick summaries of different classes of data.  Suppose we want to examine hypocotyl length of each species.  We can map hypocotyl length to the y-axis and species to the x-axis.
+
+```{r geom_box, exercise=TRUE}
+tomato %>% ggplot(aes(x=species, y=hyp)) +
+  geom_boxplot()
+```
+
+In a boxplot the horizontal line represents the median.  Look at the help for geom_boxplot to determine what other components represent:
+
+```{r quiz}
+quiz(
+  question("What does the 'box' represent?",
+    answer("the mean +/- the standard error of the mean"),
+    answer("the median +/- the standard deviation"),
+    answer("the data between the 25th and 75th percentile", correct = TRUE),
+    answer("all the data")
+  ),
+  question("How far do the 'whiskers' extend?",
+    answer("to the 95% confidence interval"),
+    answer("to the standard error of the mean"),
+    answer("to all of the data"),
+    answer("to the furthest data point within 1.5 X the interquartile range", correct = TRUE)
+  ),
+  question("What to the individual points represent?",
+           answer("planets"),
+           answer("likely error data points"),
+           answer("data points falling outside of 1.5 X the interquartile range", correct = TRUE)
+  )
+)
+```
+
+A related geom is geom_violin()
+
+Remake the above plot using geom_violin.
+
+```{r violin, exercise=TRUE}
+
+```
+
+* Do you like the box or violin plot better?
+* What does the width of the "violin" represent?
+* Which is more informative about the distribution of the data?
+
+Test your skills
+
+Make a boxplot showing hypocotyl length for the "H" and "L" treatments
+```{r box2, exercise=TRUE}
+
+```
+
+### 
+
+
+
 be sure to include multiple geoms...
+
+There are many more geoms than have been covered here.  See the documentation for more ideas.
+
+
+
 
 ## scales
 
