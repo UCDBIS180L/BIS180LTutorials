@@ -1,0 +1,196 @@
+---
+title: "ggplot tutorial"
+tutorial:
+  version: 1.0
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(learnr)
+tomato <- read_csv("www/Tomato.csv")
+tomatoH <- tomato %>% filter(trt=="H")
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## ggplot
+
+### ggplot intro
+
+The [ggplot2](http://ggplot2.org) package is a package that allows you to rapidly make impressive plots from complex data sets.
+
+In addition to this tutorial there are several excellent resources available on the web:
+
+* The visualization chapter of [R for Data Science](http://r4ds.had.co.nz/data-visualisation.html)
+* The Graphs section of [Cookbook for R](http://www.cookbook-r.com/Graphs/) (highly recommended! Especially good when you have a "how do I..." type of question)
+* The official [ggplot documentation](http://ggplot2.tidyverse.org/reference/)
+
+ggplot is part of the tidyverse, so let's load that library
+```{r tidyverse, exercise = TRUE}
+library(tidyverse)
+```
+(You can also just use `library(ggplot2)` if you don't want/need the other tidyverse packages)
+
+### A first plot
+
+We again work with the Tomato data set.  It has been preloaded for this tutorial.  To remind you, it has the following columns: 
+
+* shelf, flat, col, row: information about where each plant was grown
+* acs: the accession number for that strain
+* trt: "H" is light with a high red:far\-red ratio; simulated sun.  "L" is light with a low red:far\- red ratio; simulated plant shade.
+* days: days since germination
+* date: date of measurement
+* hyp: hypocotyl length (embryonic stem)
+* int1-int4: individual internode lengths. Internodes are stem segments
+* leafnum: which leaf was measured
+* petleng: petiole length
+* leafleng: leaf length
+* leafwid: leaf width
+* ndvi: a measure of plant vegetation density
+* lat: latitude of origin
+* long: longitude of origin
+* alt: altitude of origin
+* species: species of plant
+* who: who measured the plants
+
+I have also created a reduced data set, `tomatoH` that only contains measurements from the "H" treatment.
+```{r head, exercise=TRUE}
+head(tomatoH)
+```
+
+Let us begun by asking if there is a relationship between the length of the petiole (leaf stem) and the leaf of the leaf blade:
+
+```{r firstplot, exercise=TRUE}
+ggplot(data=tomato, 
+       mapping = aes(x=petleng,y=leafleng)) +
+  geom_point()
+```
+
+Yes, it looks like there is.  
+
+Let's look at each line of the code above:
+
+* `ggplot(data=tomato, ` ggplot is the main function and initiates the plot.  The data argument tells ggplot what data set to work on.
+* `mapping = aes(x=petleng,y=leafleng) + ` Here we are telling ggplot which columns in our data set should be mapped to particular plot __aes__thetics.  The argument is called `mapping` and the input to mapping is the `aes()` function.  We use `aes()` to tell ggplot that petiole length should be mapped to the x axis and leaf length should be mapped to the y axis.
+* notice that the line that beings with `mapping` ends with a `+` .  This tells R that we want to add to the plot created by the ggplot function.
+* `geom_point()`.  Geoms (geometries) indicate what what type of plot we want to make.
+
+We will look at these functions in more detail as the tutorial continues...
+
+Note that since we loaded tidyverse we could also pipe our data into ggplot:
+
+```{r pipe2ggplot, exercise=TRUE}
+tomato %>% ggplot(mapping = aes(x=petleng,y=leafleng)) +
+  geom_point()
+```
+
+## Aesthetics
+
+In this section we will explore aesthetics.  As noted above, aesthetics control the relationship between your data and plot elements.
+
+### color
+
+One common aesthetic is the `color` aesthetic.  Change the code below so that color is mapped to the treatment (`trt`) column:
+
+```{r color, exercise=TRUE}
+tomato %>% ggplot(mapping = aes(x=petleng,y=leafleng)) +
+  geom_point()
+```
+
+### shape
+
+The `shape` aesthetic controls the shape of the plotted points.  
+
+Create a plot of int3 vs int4 where color indicates trt, and shape indicates who measured the plant.
+
+```{r shape-color, exercise=TRUE}
+
+```
+
+
+
+
+
+## Geoms
+
+be sure to include multiple geoms...
+
+## scales
+
+## Facets
+
+## Titles and Labels
+
+## Saving plots 
+
+ggsave
+
+## Additional Resources
+
+
+
+### Exercise 
+
+*Here's a simple exercise with an empty code chunk provided for entering the answer.*
+
+Write the R code required to add two plus two:
+
+```{r two-plus-two, exercise=TRUE}
+
+```
+
+### Exercise with Code
+
+*Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
+
+Now write a function that adds any two numbers and then call it:
+
+```{r add-function, exercise=TRUE, exercise.lines = 5}
+add <- function() {
+  
+}
+```
+
+## Topic 2
+
+### Exercise with Hint
+
+*Here's an exercise where the chunk is pre-evaulated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
+
+Modify the following code to limit the number of rows printed to 5:
+
+```{r print-limit, exercise=TRUE, exercise.eval=TRUE}
+mtcars
+```
+
+```{r print-limit-hint}
+head(mtcars)
+```
+
+### Quiz
+
+*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
+
+Some questions to verify that you understand the purposes of various base and recommended R packages:
+
+```{r quiz}
+quiz(
+  question("Which package contains functions for installing other R packages?",
+    answer("base"),
+    answer("tools"),
+    answer("utils", correct = TRUE),
+    answer("codetools")
+  ),
+  question("Which of the R packages listed below are used to create plots?",
+    answer("lattice", correct = TRUE),
+    answer("tools"),
+    answer("stats"),
+    answer("grid", correct = TRUE)
+  )
+)
+```
+
