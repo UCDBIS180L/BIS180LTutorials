@@ -107,6 +107,23 @@ tomato %>% ggplot(mapping = aes(x=petleng,y=leafleng)) +
 
 The `shape` aesthetic controls the shape of the plotted points.  
 
+25 shapes are available:
+
+```{r}
+expand.grid(x=1:5,y=1:5) %>% 
+  as.tibble() %>%
+  mutate(shape=0:24) %>%
+  ggplot(aes(x=x,y=y)) +
+  geom_point(shape=0:24,size=5,fill="red") +
+  geom_label(aes(label=shape),nudge_x=-.2) +
+  scale_y_reverse() +
+  theme_void()
+  
+  #with(plot(x=x,y=y,pch=shape))
+```
+
+Note: color of the fill for shapes 21-24 can be controlled with the `fill` aesthetics. the color of the rest of the shapes, as well as the border of shapes 21-24 is controlled with the `color` aesthetic
+
 Create a plot of int3 vs int4 where color indicates trt, and shape indicates who measured the plant.
 
 ```{r shape-color, exercise=TRUE}
@@ -125,7 +142,7 @@ To practice, create a plot of latitude vs longitude where altitude is indicated 
 
 ### setting plot characteristics without mapping
 
-What if you want to change a plot characteristic but not have it mapped to a data column?  You can do this by setting the characteristic in the gome call, but outside of the `aes` function:
+What if you want to change a plot characteristic but not have it mapped to a data column?  You can do this by setting the characteristic in the geom call, but outside of the `aes` function:
 
 ```{r color2, exercise=TRUE}
 tomato %>% ggplot(mapping = aes(x=petleng,y=leafleng)) +
@@ -287,7 +304,7 @@ What does this plot illustrate?
 
 ### geom_col()
 
-`geom_col()` allows you to make a classic bar chart, where the height of the bars corresopnds to some value in the data.  This works best for data summaries.
+`geom_col()` allows you to make a classic bar chart, where the height of the bars corresponds to some value in the data.  This works best for data summaries.
 
 First let's summarize our data:
 
@@ -303,21 +320,21 @@ int3.mean.sem <- tomato %>%
 int3.mean.sem
 ```
 
-```{r col1, exercise}
+```{r col1, exercise=TRUE}
 int3.mean.sem %>% ggplot(aes(x=species, y = mean, fill=trt)) +
   geom_col()
 ```
 
 by default geom_col stacks the columns...perhaps not what we want.  We can change that with `position`
 
-```{r col1, exercise}
+```{r col2, exercise=TRUE}
 int3.mean.sem %>% ggplot(aes(x=species, y = mean, fill=trt)) +
   geom_col(position="dodge")
 ```
 
 what if we want to add error bars?  we use `geom_errorbar` and the ymin and max aesthetics
 
-```{r col1, exercise=TRUE}
+```{r col3, exercise=TRUE}
 int3.mean.sem %>% ggplot(aes(x=species, y = mean, fill=trt, ymax=mean+sem, ymin=mean-sem)) +
   geom_col(position="dodge") +
   geom_errorbar(position = position_dodge(width=0.9), width=.5)
@@ -407,13 +424,93 @@ A particular useful one is `scale_y_log10()` that transforms the y-axis scale (t
 
 ## Facets
 
+You have seen that one way to split your data by categories is to map a categorical variable to an aesthetic.  e.g. the code below separates the data into "H" and "L" treatments before making the density plot.
+
+```{r density-fill-repeat, exercise=TRUE}
+tomato %>% ggplot(aes(x=int3, fill=trt)) +
+  geom_density(alpha=.5)
+```
+
+A second way to do this is to _facet_ your data using `facet_wrap()` or `facet_grid()`.
+
+`facet_wrap()` uses a single variable for faceting and you can specify the number of rows or columns used in the layout.
+
+```{r facet-wrap-1, exercise=TRUE}
+tomato %>% ggplot(aes(x=int3)) +
+  geom_density(fill="lightblue") +
+  facet_wrap(~ trt)
+```
+
+Modify the code below so that the facets are arranged in columns instead of rows (hint, look at the help page for facet_wrap)
+
+```{r facet-wrap-2, exercise=TRUE}
+tomato %>% ggplot(aes(x=hyp)) +
+  geom_density(fill="papayawhip") +
+  facet_wrap(~ trt)
+```
+
+`facet_grid()` can use two variables to facet and uses those variable to specify the grid of rows and columns:
+
+```{r facet-grid-1, exercise=TRUE}
+tomato %>% ggplot(aes(x=int3)) +
+  geom_histogram(fill="lawngreen") +
+  facet_grid(who ~ trt)
+```
+
+Practice by recreating the plot shown below:
+
+```{r, warnings=FALSE}
+tomato %>% ggplot(aes(x=int3)) +
+  geom_histogram(fill="skyblue") +
+  facet_grid(trt ~ species, scales="free")
+```
+
 ## Titles and Labels
+
+The plot titles and labels are easily changed.  Starting with this plot:
+
+```{r}
+tomato %>% ggplot(aes(x=species,y=int3,fill=trt)) +
+  geom_boxplot()
+```
+
+we can use `ggtitle` to add a main title to the plot, and `xlab()` and `ylab()` to change the axis labels.
+
+```{r labels1, exdercise=TRUE}
+tomato %>% ggplot(aes(x=species,y=int3,fill=trt)) +
+  geom_boxplot() +
+  ylab("Internode 3 (mm)")
+```
+
+Modify the code below to further update the plot to add a title and to change the x-axis label to "Tomato Species"
+```{r labels2, exdercise=TRUE}
+tomato %>% ggplot(aes(x=species,y=int3,fill=trt)) +
+  geom_boxplot() +
+  ylab("Internode 3 (mm)")
+```
+
+There are many more manipulations to labels, as detailed in "Titles", "Axes" and "Legends" sections of the [Cookbook for R](http://www.cookbook-r.com/Graphs/).
 
 ## Saving plots 
 
-ggsave
+If you want to save your plot to an external file you can use `ggsave()`.  This will save the most recent plot to the path that you specify.  R will figure out the appropriate file type from the file extension (pdf, png, jpg, tif).  You can also specify height and width.
 
-## Additional Resources
+```{r ggsave, exercise=TRUE}
+tomato %>% ggplot(aes(x=species,y=int3,fill=trt)) +
+  geom_boxplot() +
+  ylab("Internode 3 (mm)")
+ggsave("~/Desktop/Internode3.pdf", height=6, width = 6)
+```
+
+## End
+
+This is the end of the tutorial.  
+
+As noted at the beginning, there are several sources for additional information, including:
+
+* The visualization chapter of [R for Data Science](http://r4ds.had.co.nz/data-visualisation.html)
+* The Graphs section of [Cookbook for R](http://www.cookbook-r.com/Graphs/) (highly recommended! Especially good when you have a "how do I..." type of question)
+* The official [ggplot documentation](http://ggplot2.tidyverse.org/reference/)
 
 
 
