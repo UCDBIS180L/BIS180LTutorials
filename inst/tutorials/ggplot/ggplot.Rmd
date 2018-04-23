@@ -37,7 +37,14 @@ library(tidyverse)
 
 ### A first plot
 
-We again work with the Tomato data set.  It has been preloaded for this tutorial.  To remind you, it has the following columns: 
+We again work with the Tomato data set.  It has been preloaded for this tutorial.
+
+```{r tomatohead, exercise=TRUE}
+head(tomato)
+```
+
+
+To remind you, it has the following columns: 
 
 * shelf, flat, col, row: information about where each plant was grown
 * acs: the accession number for that strain
@@ -57,11 +64,6 @@ We again work with the Tomato data set.  It has been preloaded for this tutorial
 * species: species of plant
 * who: who measured the plants
 
-I have also created a reduced data set, `tomatoH` that only contains measurements from the "H" treatment.
-```{r head, exercise=TRUE}
-head(tomatoH)
-```
-
 Let us begun by asking if there is a relationship between the length of the petiole (leaf stem) and the leaf of the leaf blade:
 
 ```{r firstplot, exercise=TRUE}
@@ -75,9 +77,9 @@ Yes, it looks like there is.
 Let's look at each line of the code above:
 
 * `ggplot(data=tomato, ` ggplot is the main function and initiates the plot.  The data argument tells ggplot what data set to work on.
-* `mapping = aes(x=petleng,y=leafleng) + ` Here we are telling ggplot which columns in our data set should be mapped to particular plot __aes__thetics.  The argument is called `mapping` and the input to mapping is the `aes()` function.  We use `aes()` to tell ggplot that petiole length should be mapped to the x axis and leaf length should be mapped to the y axis.
+* `mapping = aes(x=petleng,y=leafleng) + ` Here we are telling ggplot which columns in our data set should be mapped to particular plot AESthetics.  The argument is called `mapping` and the input to mapping is the `aes()` function.  We use `aes()` to tell ggplot that petiole length should be mapped to the x axis and leaf length should be mapped to the y axis.
 * notice that the line that beings with `mapping` ends with a `+` .  This tells R that we want to add to the plot created by the ggplot function.
-* `geom_point()`.  Geoms (geometries) indicate what what type of plot we want to make.
+* `geom_point()`.  Geoms (geometries) indicate what type of plot we want to make.
 
 We will look at these functions in more detail as the tutorial continues...
 
@@ -96,7 +98,14 @@ In this section we will explore aesthetics.  As noted above, aesthetics control 
 
 ### color
 
-One common aesthetic is the `color` aesthetic.  Change the code below so that color is mapped to the treatment (`trt`) column:
+One common aesthetic is the `color` aesthetic.
+
+```{r}
+tomato %>% ggplot(mapping = aes(x=petleng,y=leafleng, color=trt)) +
+  geom_point()
+```
+
+Change the code below so that color is mapped to the treatment (`trt`) column, therby re-creating the plot shown above:
 
 ```{r color, exercise=TRUE}
 tomato %>% ggplot(mapping = aes(x=petleng,y=leafleng)) +
@@ -129,6 +138,13 @@ Create a plot of int3 vs int4 where color indicates trt, and shape indicates who
 ```{r shape-color, exercise=TRUE}
 
 ```
+
+Your plot should look like this:
+
+```{r}
+tomato %>% ggplot(aes(x=int3, y=int4, shape=who, color=trt)) + geom_point()
+```
+
 
 ### size
 
@@ -188,11 +204,22 @@ tomato %>% ggplot(aes(x=lon, y = lat)) +
   geom_point()
 ```
 
-Try including a trend-line to the plot of int3 vs int4.  Does the order of geom_smooth and geom_point matter in the final output of the plot?
+Make a scatter plot of int3 vs int4 as you have before, but this time add a trendline.
 
 ```{r smooth-order, exercise = TRUE}
 
 ```
+
+```{r layer-quiz}
+quiz(
+  question("Does the order of geom_smooth and geom_point matter in the final output of the plot? Try different orders and then chose the correct answer",
+    answer("Yes, the order that the geoms are given determines the order in which they are layered on the plot.  The first geom listed is plotted FIRST and subsequent geoms are plotted on top of that.", correct = TRUE),
+    answer("Yes, the order that the geoms are given determines the order in which they are layered on the plot.  The first geom listed is plotted LAST; subsequent geoms are plotted underneath."),
+    answer("No, the order does not matter")
+  )
+)
+```
+
 
 ### geom_histogram() and geom_density()
 
@@ -235,7 +262,7 @@ Alpha can be used in most geoms.
 
 ### geom_boxplot() and geom_violin()
 
-Boxplots and violin plots are provide quick summaries of different classes of data.  Suppose we want to examine hypocotyl length of each species.  We can map hypocotyl length to the y-axis and species to the x-axis.
+Boxplots and violin plots provide quick summaries of different classes of data.  Suppose we want to examine hypocotyl length of each species.  We can map hypocotyl length to the y-axis and species to the x-axis.
 
 ```{r geom_box, exercise=TRUE}
 tomato %>% ggplot(aes(x=species, y=hyp)) +
@@ -299,6 +326,9 @@ tomato %>% ggplot(aes(x=species, y = int3, fill = trt)) +
 ```{r box-fill, exercise = TRUE}
 
 ```
+<div id="box-fill-hint">
+Look at the plots to figure out the aesthetics: what is mapped to x, y, and fill?  Once you know that you should be able to code it up!
+</div>
 
 What does this plot illustrate?
 
@@ -335,7 +365,11 @@ int3.mean.sem %>% ggplot(aes(x=species, y = mean, fill=trt)) +
 what if we want to add error bars?  we use `geom_errorbar` and the ymin and max aesthetics
 
 ```{r col3, exercise=TRUE}
-int3.mean.sem %>% ggplot(aes(x=species, y = mean, fill=trt, ymax=mean+sem, ymin=mean-sem)) +
+int3.mean.sem %>% ggplot(aes(x=species, 
+                             y = mean, 
+                             fill=trt, 
+                             ymax=mean+sem, 
+                             ymin=mean-sem)) +
   geom_col(position="dodge") +
   geom_errorbar(position = position_dodge(width=0.9), width=.5)
 ```
@@ -476,14 +510,14 @@ tomato %>% ggplot(aes(x=species,y=int3,fill=trt)) +
 
 we can use `ggtitle` to add a main title to the plot, and `xlab()` and `ylab()` to change the axis labels.
 
-```{r labels1, exdercise=TRUE}
+```{r labels1, exercise=TRUE}
 tomato %>% ggplot(aes(x=species,y=int3,fill=trt)) +
   geom_boxplot() +
   ylab("Internode 3 (mm)")
 ```
 
 Modify the code below to further update the plot to add a title and to change the x-axis label to "Tomato Species"
-```{r labels2, exdercise=TRUE}
+```{r labels2, exercise=TRUE}
 tomato %>% ggplot(aes(x=species,y=int3,fill=trt)) +
   geom_boxplot() +
   ylab("Internode 3 (mm)")
