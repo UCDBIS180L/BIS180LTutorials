@@ -1,7 +1,7 @@
 ---
 title: "ggplot tutorial"
 tutorial:
-  version: 1.0
+  version: 1.1
 output: 
   learnr::tutorial:
     progressive: true
@@ -13,6 +13,14 @@ library(tidyverse)
 library(learnr)
 tomato <- read_csv("www/Tomato.csv")
 tomatoH <- tomato %>% filter(trt=="H")
+sem <- function(x, na.rm=FALSE) {
+  sd(x,na.rm=na.rm)/sqrt(length(na.omit(x)))
+}
+
+int3.mean.sem <- tomato %>%
+  group_by(species, trt) %>%
+  summarize(mean=mean(int3, na.rm=TRUE), sem=sem(int3, na.rm=TRUE))
+
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 ```
 
