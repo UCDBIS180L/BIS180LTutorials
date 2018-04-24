@@ -346,7 +346,7 @@ What does this plot illustrate?
 
 First let's summarize our data:
 
-```{r, echo=TRUE}
+```{r create-int3.mean.sem, exercise=TRUE}
 sem <- function(x, na.rm=FALSE) {
   sd(x,na.rm=na.rm)/sqrt(length(na.omit(x)))
 }
