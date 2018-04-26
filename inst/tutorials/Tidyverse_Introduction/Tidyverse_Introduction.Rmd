@@ -68,7 +68,7 @@ Explanation of column headings:
 * leafwid: leaf width
 * ndvi: a measure of plant vegetation density
 * lat: latitude of origin
-* long: longitude of origin
+* lon: longitude of origin
 * alt: altitude of origin
 * species: species of plant
 * who: who measured the plants
