@@ -182,6 +182,13 @@ fruit.long %>%
 
 Now try spreading the the tomato data to recreate the original format.  Modify the code below.
 
+I have created a `tomato.long` data set.  First take a look:
+
+```{r tomato-look, exercise=TRUE}
+tomato.long
+```
+
+
 ```{r spread-practice, exercise=TRUE}
 tomato.long %>%
   spread(...)
