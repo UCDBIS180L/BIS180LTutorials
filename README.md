@@ -36,3 +36,11 @@ where "TUTORIAL_NAME" gets replaced by one of "Tidyverse_Introduction", "ggplot"
 ## Additional resources
 
 The material introduced in these tutorials is covered in much more detail in [R for data science](http://r4ds.had.co.nz/) by Garrett Grolemund and Hadley Wickham
+
+## Serving the tutorials
+
+If you want to serve the tutorials on a shiny server instance, then:
+
+* be sure that the directory containing the tutorials is owned by shiny
+* delete the .html file associated with each tutorial
+
