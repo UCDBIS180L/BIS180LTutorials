@@ -33,6 +33,6 @@ learnr::run_tutorial("TUTORIAL_NAME", package = "BIS180LTutorials")
 ```
 where "TUTORIAL_NAME" gets replaced by one of "Tidyverse_Introduction", "ggplot", "Gather_And_Spread", or "Joins".  (keep the quotes).
 
-## additional resources
+## Additional resources
 
 The material introduced in these tutorials is covered in much more detail in [R for data science](http://r4ds.had.co.nz/) by Garrett Grolemund and Hadley Wickham
