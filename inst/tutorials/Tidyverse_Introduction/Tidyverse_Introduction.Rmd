@@ -22,13 +22,14 @@ The goal of this tutorial is to introduce the [tidyverse](https://www.tidyverse.
 
 The material covered here is also explained in greater detail in the course textbook [_R for Data Science_](http://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemund.  I encourage you to use that book for clarification or greater depth.  It is free online.
 
-In R there are many add on packages, a.k.a. `libraries`.  Tidyverse is one such package.  We use the `library()` command to load a library for use in our current R session.  `library()` takes the package name as an argument.  Use `library` to load the `tidyverse` package using the window below.
+In R there are many add on packages, a.k.a. `libraries`.  Tidyverse is one such package.  We use the `library()` command to load a library for use in our current R session.  `library()` takes the package name as an argument.
+
+To use the functions in this tutorial in your own R session you would need to use `library` to load the `tidyverse` package as shown below.  I've pre-loaded it for this tutorial
 
 
-```{r load-tidyverse, exercise=TRUE}
+```{r load-tidyverse, exercise=FALSE}
 library(tidyverse)
 ```
-(no output will be generated)
 
 ## Tibbles
 
