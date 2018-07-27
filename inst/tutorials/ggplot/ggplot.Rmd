@@ -37,8 +37,11 @@ In addition to this tutorial there are several excellent resources available on 
 * The Graphs section of [Cookbook for R](http://www.cookbook-r.com/Graphs/) (highly recommended! Especially good when you have a "how do I..." type of question)
 * The official [ggplot documentation](http://ggplot2.tidyverse.org/reference/)
 
-ggplot is part of the tidyverse, so to use these functions in your own R session you would need to load that library.  I've pre-loaded it for this tutorial.
-```{r tidyverse, eval = FALSE}
+### pre-requisites
+
+ggplot is part of the tidyverse, so to use these functions in your own R session you would need to load that library.  I've pre-loaded it for this tutorial.  Otherwise, you would need to enter
+
+```
 library(tidyverse)
 ```
 (You can also just use `library(ggplot2)` if you don't want/need the other tidyverse packages)

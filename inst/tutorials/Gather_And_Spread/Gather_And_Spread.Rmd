@@ -18,10 +18,9 @@ tomato.long <- tomato %>% gather(key="phenotype", value = "value", hyp:int4)
 fruit.long <- fruit %>% gather(key="data_type", value = "value", -fruit)
 ```
 
+### pre-requisites
 To use the functions in this tutorial in your own R session you would need to use `library` to load the `tidyverse` package as shown below.  I've pre-loaded it for this tutorial.
-
-
-```{r load-tidyverse, exercise=FALSE}
+```
 library(tidyverse)
 ```
 

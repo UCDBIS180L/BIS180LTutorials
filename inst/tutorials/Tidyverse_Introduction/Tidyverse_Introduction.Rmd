@@ -24,10 +24,10 @@ The material covered here is also explained in greater detail in the course text
 
 In R there are many add on packages, a.k.a. `libraries`.  Tidyverse is one such package.  We use the `library()` command to load a library for use in our current R session.  `library()` takes the package name as an argument.
 
-To use the functions in this tutorial in your own R session you would need to use `library` to load the `tidyverse` package as shown below.  I've pre-loaded it for this tutorial
+### pre-requisites
 
-
-```{r load-tidyverse, exercise=FALSE}
+To use the functions in this tutorial in your own R session you would need to use `library` to load the `tidyverse` package as shown below.  I've pre-loaded it for this tutorial.
+```
 library(tidyverse)
 ```
 
