@@ -41,9 +41,9 @@ To import data into R as a tibble it is convenient to have it saved as a [comma 
 
 We import the data using the `read_csv()` function.  If you have used R before, please note that this is a different function than `read.csv()`.  `read_csv()` created a tibble upon import instead of a data frame.
 
-We will use data from a pilot experiment measuring the growth of various wild tomato accessions and species under different light conditions.  To load this data into R you would need to run the code below, modifying the path as appropriate (you do not need to modify it for this tutorial).
+We will use data from a pilot experiment measuring the growth of various wild tomato accessions and species under different light conditions.  To load this data into R you would need to run the code below, modifying the path as appropriate (you do not need to run or modify it for this tutorial).
 
-```{r data_import, exercise=TRUE, eval=FALSE}
+```{r data_import, exercise=FALSE, eval=FALSE, echo=TRUE}
 tomato <- read_csv("www/Tomato.csv")
 ```
 
