@@ -232,7 +232,7 @@ Want more info? See [mutate in R 4 Data Science](http://r4ds.had.co.nz/transform
 
 Tidyverse functions also provide an easy way to summarize your data.
 
-We first tell R what groups we are interested in summarizing (using `group_by()`, and then how we want it summarized (`summarize()`).
+We first tell R _what_ groups we are interested in summarizing (using `group_by()`, and then _how_ we want it summarized (`summarize()`).
 
 For example, if we wanted the mean hypocotyl length of each species, then:
 
@@ -242,19 +242,31 @@ tomato %>%
   summarize(hyp.mean=mean(hyp)) #hyp.mean is what the new summary will be called 
 ```
 
-We can group by multiple factors:
+If we want to also have a summary column that tells us the number of measurements in each group we can use `n()`
+
 ```{r summarize2, exercise=TRUE}
 tomato %>%
-  group_by(species,trt) %>%
-  summarize(hyp.mean=mean(hyp))
+  group_by(species) %>% 
+  summarize(hyp.mean=mean(hyp),
+            n=n()) 
 ```
 
-Also we can create multiple summary columns, and, of course, the results can be stored in a new object
-
+We can group by multiple factors:
 ```{r summarize3, exercise=TRUE}
+tomato %>%
+  group_by(species,trt) %>%
+  summarize(hyp.mean=mean(hyp),
+            n=n())
+```
+
+Also we can create even more summary columns, and, of course, the results can be stored in a new object
+
+```{r summarize4, exercise=TRUE}
 hyp.summary <- tomato %>%
   group_by(species,trt) %>%
-  summarize(hyp.mean=mean(hyp), hyp.sd=sd(hyp))
+  summarize(hyp.mean=mean(hyp), 
+            hyp.sd=sd(hyp),
+            n=n())
 hyp.summary
 ```
 
@@ -262,9 +274,18 @@ Your turn...
 
 calculate the median altitude of each species, then pipe the results into arrange to sort by altitude.  Which species comes from the highest altitude?
 
-```{r summarize4, exercise=TRUE}
+```{r summarize5, exercise=TRUE}
 
 ```
+
+calculate the number of measurements made by each researcher for each species.
+
+```{r summarize6, exercise=TRUE}
+
+```
+
+Who worked harder?
+
 
 ## End
 
