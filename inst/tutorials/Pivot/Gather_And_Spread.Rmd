@@ -1,0 +1,197 @@
+---
+title: "Pivot Longer and Pivot Wider"
+tutorial:
+  version: 1.0
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+knitr::opts_chunk$set(echo = FALSE)
+fruit <- read_csv("www/fruit_all.csv")
+tomato <- read_csv("www/tomato_small.csv") %>% filter(!duplicated(paste0(species,trt)))
+tomato.long <- tomato %>% gather(key="phenotype", value = "value", hyp:int4)
+fruit.long <- fruit %>% gather(key="data_type", value = "value", -fruit)
+```
+
+### pre-requisites
+To use the functions in this tutorial in your own R session you would need to use `library` to load the `tidyverse` package as shown below.  I've pre-loaded it for this tutorial.
+```
+library(tidyverse)
+```
+
+## Introduction to Pivot Longer and Pivot Wider
+
+### Wide data
+
+There are two main ways that spreadsheets can be organized.  The __wide__ data format has one individual or sample per row and observations spread across multiple columns.
+
+__Wide Data Example 1__  
+There is one fruit type per row and multiple observations types across the columns.
+```{r, echo=FALSE}
+head(fruit)
+```
+
+
+__Wide Data Example 2__  
+There is one tomato plant per row and multiple observations of different phenotypes in the columns:
+```{r, echo=FALSE}
+head(tomato)
+```
+
+### Long data
+
+Alternatively, in the __long__ data format there is a single observation per row, and a key that indicates the type of observation.
+
+__Long Data Example 1__
+```{r}
+fruit %>% pivot_longer(-fruit, names_to = "observation_type", values_to = "value") %>% arrange(fruit)
+```
+
+__Long Data Example 2__
+```{r, echo=FALSE}
+tomato %>% pivot_longer(hyp:int4, names_to="phenotype", values_to = "value")
+```
+
+### Who cares?
+
+Typically data arrives in the wide format.  Often to accomplish the analyses you will want to do in R you will need it in the long format.  For example, ggplot only deals with a single column of values per aesthetic.  If you want to plot multiple categories of observations at once you need them gathered into the long format.  For example to make the graph below, the data has to be in the long format:
+
+```{r, echo=FALSE}
+tomato %>% pivot_longer(hyp:int4, names_to="phenotype", values_to = "value", ) %>%
+  ggplot(aes(x=species, y=value, fill=phenotype)) + 
+  geom_col() +
+  facet_wrap(~trt) + 
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+
+## Pivot Longer
+
+To convert wide format to long format we use the `pivot_longer()` function from tidyverse.  It is appropriately named, because we are reformatting to make our data sheet _longer._
+
+### Intro to pivot londer
+
+Let's look again at the original fruit data set:
+```{r, echo=FALSE}
+fruit
+```
+
+Here is how we gather it.
+```{r gather1, exercise=TRUE}
+fruit.long <- fruit %>% 
+  pivot_longer(c(color, shape, size), # the column names that we want to gather.
+                                      # we could also use starts_with(), etc.
+               
+               names_to="data_type", # the column name of the new column that will 
+                                     # contain the key (the old coumn names)
+               
+                values_to="value"    # the column name of the column that will contain the observations
+  )
+fruit.long
+```
+
+Pay attention to the arguments.
+* The first arguments specify the columns that are to be combined.
+* `names_to` defines the column name of the new column that will contain the old column names
+* `values_to` defines the column name of the column that will contain the actual data
+
+```{r gather-quiz2}
+quiz(
+  question("Where did the values from the `color`, `shape` and `size` columns go?",
+    answer("Into the `names_to` column"),
+    answer("Into the `values_to` column", correct = TRUE),
+    answer("They vanished!")
+  )
+)
+```
+
+### Column specification
+
+There are multiple ways that you can specify the columns to be gathered.
+
+*You can list them all enclosed by `c()`, as done in the first example:
+
+```{r gather2, exercise=TRUE}
+fruit.long <- fruit %>% 
+  pivot_longer(c(color, shape, size),
+               names_to="data_type", 
+                values_to="value")
+fruit.long
+```
+
+*You can specify them as a range from the first to last column that you want:
+
+```{r gather3, exercise=TRUE}
+fruit.long <- fruit %>% 
+  pivot_longer(color:size,
+               names_to="data_type", 
+                values_to="value")
+fruit.long
+```
+
+*You can instead use the `-` to indicate columns that you do not want to gather; all others will be included.  Try it by changing the code below
+
+```{r gather4, exercise=TRUE}
+fruit.long <- fruit %>% 
+  pivot_longer(-COLUMN_TO_EXCLUDE,
+               names_to="data_type", 
+                values_to="value")
+fruit.long
+```
+
+You can also use all the other `tidy` column specifications such as `starts_with()`, `ends_with()`, etc.
+
+### Gather the tomato data
+
+Practice what you learned above to gather the hyp, int1, int2, int3, and int4 columns together in the tomato data set.  Your end product should look like this:
+
+```{r, echo=FALSE}
+tomato %>% pivot_longer(hyp:int4, names_to="phenotype", values_to = "value", )
+```
+
+```{r tomato-gather, exercise=TRUE}
+
+```
+
+## Make you data wider
+
+What if you need to go the other direction, from long format to wide?  For this we use the `pivot_wider()` function, to spread our values across multiple columns.
+
+If we start with a long data set:
+
+```{r, echo=FALSE}
+fruit.long
+```
+
+We can make it wider as follows
+```{r spread-example, exercise=TRUE}
+fruit.long %>% 
+  pivot_wider(names_from = "data_type", # which column holds the names for the new columns?  
+         values_from = "value") # which column contains the values?
+```
+
+Now try converting the the tomato data from long format to recreate the original wide format.  Modify the code below.
+
+I have created a `tomato.long` data set.  First take a look:
+
+```{r tomato-look, exercise=TRUE}
+tomato.long
+```
+
+
+```{r spread-practice, exercise=TRUE}
+tomato.long %>%
+  pivot_longer(...)
+```
+
+## More information
+
+There is additonal functionality not covered here, including clever ways to manipulate the column names.  
+
+Information on this and other aspects of pivoting is provided on the [tidyverse website](https://tidyr.tidyverse.org/articles/pivot.html)
+
