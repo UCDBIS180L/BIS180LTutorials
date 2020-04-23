@@ -18,13 +18,14 @@ tomato.long <- tomato %>% gather(key="phenotype", value = "value", hyp:int4)
 fruit.long <- fruit %>% gather(key="data_type", value = "value", -fruit)
 ```
 
+## Introduction to Pivot Longer and Pivot Wider
+
 ### pre-requisites
 To use the functions in this tutorial in your own R session you would need to use `library` to load the `tidyverse` package as shown below.  I've pre-loaded it for this tutorial.
+
 ```
 library(tidyverse)
 ```
-
-## Introduction to Pivot Longer and Pivot Wider
 
 ### Wide data
 
@@ -74,7 +75,7 @@ tomato %>% pivot_longer(hyp:int4, names_to="phenotype", values_to = "value", ) %
 
 To convert wide format to long format we use the `pivot_longer()` function from tidyverse.  It is appropriately named, because we are reformatting to make our data sheet _longer._
 
-### Intro to pivot londer
+### Intro to pivot longer
 
 Let's look again at the original fruit data set:
 ```{r, echo=FALSE}
@@ -191,7 +192,7 @@ tomato.long %>%
 
 ## More information
 
-There is additonal functionality not covered here, including clever ways to manipulate the column names.  
+There is additional functionality not covered here, including clever ways to manipulate the column names.  
 
 Information on this and other aspects of pivoting is provided on the [tidyverse website](https://tidyr.tidyverse.org/articles/pivot.html)
 
