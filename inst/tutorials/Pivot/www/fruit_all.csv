@@ -1,0 +1,11 @@
+"fruit","color","shape","size"
+"apple","red","round","medium"
+"banana","yellow","oblong","medium"
+"blueberry","blue","round","very small"
+"eggplant","purple","oblong","large"
+"grape","green","oblong","small"
+"peach","yellow","round","medium"
+"tomato","red","round",NA
+"nectarine",NA,"round","medium"
+"pear",NA,"other","medium"
+"watermelon",NA,NA,"extra large"
