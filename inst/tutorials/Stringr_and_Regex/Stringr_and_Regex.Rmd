@@ -22,6 +22,7 @@ mywords <- words[words%in%rev_words]
 mywords <- mywords[-1] %>% str_subset("^(.).*\\1$", negate = TRUE)
 mywords <- mywords[c(1,2,3,6)]
 rm(rev_words)
+people <- tibble(full_name=c("Maloof, Julin", "Davis, John", "Harmer, Stacey", "Harada, John", "Britt, Anne", "Brady, Siobhan", "Liu, Bo", "Sinha, Neelima", "Ledford, Joel"))
 save.image(file="www/bnames.Rdata")
 ```
 
@@ -36,7 +37,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Stringr and Regular Expressions
 
-The goal of this tutorial is to introduce string manipulation and regular expression (wildcard) matching using the [stringr]() package.
+The goal of this tutorial is to introduce string manipulation and regular expression (wildcard) matching using the [stringr](https://stringr.tidyverse.org/) package.
 
 The material covered here is also explained in greater detail in [Chapter 14 of the course textbook _R for Data Science_](https://r4ds.had.co.nz/strings.html) by Hadley Wickham and Garrett Grolemund.  I encourage you to use that book for clarification or greater depth.  It is free online.
 
@@ -133,7 +134,7 @@ Regular expressions can get pretty confusing. By adding the "match=TRUE" argumen
 bnames1000 %>% str_view("a.a", match = TRUE)
 ```
 
-__Now you try it:__ use `str_subset()` or `str_view()` on the the `bnames1000` list to show names where there are two "i"s separated by two characters
+__Now you try it:__ use `str_subset()` or `str_view()` on the the `bnames1000` list to show names where there are two "i"s separated by two characters. You should get 24 matches
 
 ```{r period2, exercise=TRUE}
 
@@ -143,7 +144,7 @@ __Now you try it:__ use `str_subset()` or `str_view()` on the the `bnames1000` l
 
 But what if you want to actually find a period? Just using `str_detect()`doesn't work because `.` matches everything:
 
-```{r}
+```{r escape1, exercise=TRUE}
 test <- c("has.a.period", "has_no_period", "hasNoPunctuation")
 test %>% str_detect(".")
 ```
@@ -152,13 +153,15 @@ There are two options:
 
 1) use `\\` to 'escape' it, that is to remove its special meaning.  Somewhat confusingly we have to use `\\` because we have to escape the `\` itself.
 
-```{r}
+```{r escape2, exercise=TRUE}
+test <- c("has.a.period", "has_no_period", "hasNoPunctuation")
 test %>% str_detect("\\.")
 ```
 
 2) If you do not need to use a regular expression at all in your search string you can embed it within `fixed()` which indicates that everything in the pattern should be used literally.
 
-```{r}
+```{r escape3, exercise=TRUE}
+test <- c("has.a.period", "has_no_period", "hasNoPunctuation")
 test %>% str_detect(fixed("."))
 ```
 
@@ -180,7 +183,7 @@ bnamesearly %>% str_subset("ez{1,2}")
 ```
 
 ```{r num-match, exercise=TRUE}
-bnamesearly %>% str_subset("ez{1,2}")
+bnamesearly %>% str_subset("")
 ```
 
 ## Regular Expressions, part 2
@@ -189,10 +192,18 @@ bnamesearly %>% str_subset("ez{1,2}")
 
 If we want to match any of a particular set of characters we can include the group in `[]`.
 
-__Practice:__ Experiment with `[]` to find all names in the `bnames100` list that start with a vowel (you should find 19):
+__Practice:__ Experiment with `[]` to find all names in the `bnames100` list that start with a vowel. People's names start with capital letters (You should find 19):
 
 ```{r brackets, exercise=TRUE}
 bnames100 %>% str_subset("[]")
+```
+
+We can also use character sets to exclude a particular set of characters by placing a `^` as the first character in our brackets `[^]`.
+
+__Practice:__ Experiment with `[^]` to find all letters in the `letters` that are not vowels. (You should find 21):
+
+```{r brackets2, exercise=TRUE}
+letters %>% str_subset("[^]")
 ```
 
 You can also specify ranges using "-" so that `[0-5]` matches numbers from 0 to 5 and `[j-n]` matches j, k, l, m, or n, `[A-Z]` is all capital letters, etc.  There are also some predefined classes but generally I do not recommend using them because the definitions change depending on your locale.
@@ -221,19 +232,19 @@ Why are these last two different?  The first returns all names that contain "Jac
 
 __Practice:__ The object `fruit` contains 80 fruit names.  
 
-__1)__ Find all of those that contain "berry" or "pepper.
+__1)__ Find all of those that contain "berry" or "pepper. (There will be 16)
 
 ```{r bp1, exercise=TRUE}
 fruit %>% str_subset("") 
 ```
 
-__2)__ Find all fruit names that have a space " " preceding "berry" or "pepper"
+__2)__ Find all fruit names that have a space " " preceding "berry" or "pepper". (There will be 4)
 
 ```{r bp2, exercise=TRUE}
 fruit %>% str_subset("") 
 ```
 
-__3)__ Find all fruit names that contain "berry" or "pepper" but that do NOT have a preceding space 
+__3)__ Find all fruit names that contain "berry" or "pepper" but that do NOT have a preceding space. (There will be 12)
 
 ```{r bp3, exercise=TRUE}
 fruit %>% str_subset("") 
@@ -243,19 +254,20 @@ fruit %>% str_subset("")
 
 Earlier you were asked to find all names that start with a vowel.  This was relatively easy because the first letter of the `bnames` list is capitalized. But what if you wanted all fruit that started with a vowel?  Luckily we can specify the beginning of a string with `^` and the end of a string with `$`.
 
-__Practice:__ Use this information to find all fruit that start with a vowel:
+__Practice:__ Use this information to find all fruit that start with a vowel: (There will be 8)
 
 ```{r fruitvowel1, exercise=TRUE}
 fruit %>% str_subset("") 
 ```
 
-__Practice:__ Now try finding all fruit that start AND end with a vowel.
+__Practice:__ Now try finding all fruit that start AND end with a vowel. (There will be 4)  
+_Hint: You will need to find some way to do with the letters in the middle of the words_
 
 ```{r fruitvowel2, exercise=TRUE}
 fruit %>% str_subset("") 
 ```
 
-__Practice:__ How about all fruit that start OR end with a vowel?
+__Practice:__ How about all fruit that start __OR__ end with a vowel? (There will be 32)
 
 ```{r fruitvowel3, exercise=TRUE}
 fruit %>% str_subset("") 
@@ -264,12 +276,18 @@ fruit %>% str_subset("")
 ## More `str_` functions
 
 ### Removing matches
-`str_remove` removes the (first) match of the pattern and returns the rest of the string; `str_remove_all()` removes all occurrences of it..
+`str_remove` removes the (first) match of the pattern and returns the rest of the string; `str_remove_all()` removes all occurrences of it.
 
-To try this, try removing the first lowercase vowel and then all lowercase vowels from `bnames10`
+Try removing the first lowercase vowel from `bnames10`
 
 
 ```{r stremove, exercise=TRUE}
+bnames10 %>% 
+```
+
+Now try removing  all lowercase vowels from `bnames10`
+
+```{r stremove2, exercise=TRUE}
 bnames10 %>% 
 ```
 
@@ -307,35 +325,34 @@ mywords
 str_replace(mywords, "^(.)(.*)(.)$", "\\3\\2\\1")
 ```
 
-__Stop and Think:__ What does each term in the regular expression match?  How does this reverse the first and last characters?
+__Stop and Think:__ What does each term in the regular expression match?  How does this reverse the first and last characters? How was the computer able to reverse the order of "no" despite it only being 2 characters?
 
 ## Mutate
 
 All of these functions can be used with `mutate()` to transform columns of a dataframe or tibble.  Consider this list of names:
 
 ```{r, echo=FALSE}
-names <- tibble(full_name=c("Maloof, Julin", "Davis, John", "Harmer, Stacey", "Harada, John", "Britt, Anne", "Brady, Siobhan", "Liu, Bo", "Sinha, Neelima", "Ledford, Joel"))
-names
+people
 ```
 
 We can use `mutate()` to create a new column with just the first name:
 
 ```{r mut1, exercise=TRUE}
-names %>%
+people %>%
   mutate(first_name=str_remove(full_name, ".*, "))
 ```
 
 __Practice: __ Create a column with the last names.
 
 ```{r mut2, exercise=TRUE}
-names %>%
+people %>%
   mutate(last_name=)
 ```
 
 An alternative approach using `mutate()` and `str_replace()`:
 
 ```{r mut3, exercise=TRUE}
-names %>%
+people %>%
   mutate(first_name=str_replace(full_name, ".*, (.*)", "\\1"))
 ```
 
@@ -344,20 +361,20 @@ __Stop and Think:__ In your own words explain the regular expressions above and 
 __Practice:__ Use `mutate()` and `str_replace()` to create a column with last names.
 
 ```{r mut4, exercise=TRUE}
-names %>%
+people %>%
   mutate(last_name=)
 ```
 
 __Practice:__ Use `mutate()` and `str_replace()` to create a column with the first name followed by the last name.  Your result should look like this:
 
 ```{r, echo=FALSE}
-names %>%
+people %>%
   mutate(first_last=str_replace(full_name, "(.*), (.*)", "\\2 \\1"))
 ```
 
 ```{r mut5, exercise=TRUE}
-names %>%
-  mutate(last_name=)
+people %>%
+  mutate(first_last=)
 ```
 
 ## Resources and final words
