@@ -1,0 +1,304 @@
+---
+title: "Introduction to Tidyverse"
+tutorial:
+  version: 1.0
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+---
+
+
+```{r, eval=FALSE, include=FALSE}
+# this was used to set up the data sets.
+library(babynames)
+set.seed(99)
+bnamesearly <- babynames %>% subset(year < 1901) %>% pull(name) %>% unique()
+bnames10 <- sample(bnamesearly, 10)
+bnames100 <- sample(bnamesearly, 100)
+bnames1000 <- sample(bnamesearly, 1000)
+bnamesall <- babynames$name %>% unique()
+save.image(file="www/bnames.Rdata")
+```
+
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+load("www/bnames.Rdata")
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Stringr and Regular Expressions
+
+The goal of this tutorial is to introduce string manipulation and regular expression (wildcard) matching using the [stringr]() package.
+
+The material covered here is also explained in greater detail in [Chapter 14 of the course textbook _R for Data Science_](https://r4ds.had.co.nz/strings.html) by Hadley Wickham and Garrett Grolemund.  I encourage you to use that book for clarification or greater depth.  It is free online.
+
+stringr is part of the tidyverse and is loaded when you load tidyverse. It provides a set of functions with consistent syntax for manipulating strings.
+
+### pre-requisites
+
+To use the functions in this tutorial in your own R session you would need to use `library` to load the `tidyverse` package as shown below.  I've pre-loaded it for this tutorial.
+```
+library(tidyverse)
+```
+
+## Detect strings with `str_detect()`
+
+The `str_detect()` function looks for the presence of a search pattern in a string and returns TRUE if it detects the pattern.
+
+For example, consider the following 10 names:
+
+```{r}
+bnames10
+```
+
+Run the code below to search for names that contain "a":
+
+```{r str-detect-1, exercise=TRUE}
+bnames10 %>% str_detect("a")
+```
+
+`str_view()` performs a similar task but creates a visualization rather than returning output:
+
+```{r str-detect-1view, exercise=TRUE}
+bnames10 %>% str_view("a")
+```
+
+__Question:__
+```{r str-detect-q, echo=FALSE}
+question("Is str_detect() case sensitive?",
+  answer("Yes", correct = TRUE),
+  answer("No")
+)
+```
+
+__Practice:__ Use str_detect to detect names with "A".
+```{r str-detect-ex-2, exercise=TRUE}
+
+```
+
+## Subset strings with `str_subset()`
+
+If we want to only retain those strings that match our pattern, we use `str_subset()`.
+
+Run the code below to retain names that contain "a":
+
+```{r str-subset-1, exercise=TRUE}
+bnames10 %>% str_subset("a")
+```
+
+__Practice:__ keep names that contain "th"
+```{r str-subset-ex-1, exercise=TRUE}
+
+```
+
+## Extract part of a string with `str_extract()`
+
+If we want to extract the matching part of the string, we can use `str_extract()`
+
+```{r str-extract-1, exercise=TRUE}
+bnames10 %>% str_extract("a")
+```
+
+__Practice:__ Go ahead and try it, with the pattern of your choice.
+
+```{r str-extract-2, exercise=TRUE}
+
+```
+
+This doesn't seem  very useful right now, but it will...
+
+## Regular Expressions, part 1
+
+Regular expressions are a powerful syntax for specifying wildcards and doing complex pattern matching.  They are a component of most (or all) modern computer languages.  We will only scratch the surface here, but this should be enough to do a fair number of basic tasks.
+
+### The wildcard character.
+
+The `.` character matches any character, so if we want to find names where there are two "a"s separated by any character, then: (note we are using a list of 1000 names now)
+
+```{r period1, exercise=TRUE}
+bnames1000 %>% str_subset("a.a")
+```
+
+Regular expressions can get pretty confusing. By adding the "match=TRUE" argument to`str_view()` we get a nice visualization that is similar to `str_subset()`:
+
+```{r period1view, exercise=TRUE}
+bnames1000 %>% str_view("a.a", match = TRUE)
+```
+
+__Now you try it:__ use `str_subset()` or `str_view()` on the the `bnames1000` list to show names where there are two "i"s separated by two characters
+
+```{r period2, exercise=TRUE}
+
+```
+
+### Escaping characters
+
+But what if you want to actually find a period? Just using `str_detect()`doesn't work because `.` matches everything:
+
+```{r}
+test <- c("has.a.period", "has_no_period", "hasNoPunctuation")
+test %>% str_detect(".")
+```
+
+There are two options:
+
+1) use `\\` to 'escape' it, that is to remove its special meaning.  Somewhat confusingly we have to use `\\` because we have to escape the `\` itself.
+
+```{r}
+test %>% str_detect("\\.")
+```
+
+2) If you do not need to use a regular expression at all in your search string you can embed it within `fixed()` which indicates that everything in the pattern should be used literally.
+
+```{r}
+test %>% str_detect(fixed("."))
+```
+
+### Specifying the number of matches.
+
+The number of matching can be specified by appending special characters: (This is taken from the r help file on `regexp`)
+
+* `*` specifies that the preceding item will be matched 0 or more times
+* `?` the preceding item will be matched 0 or 1 times
+* `+` The preceding item will be matched one or more times.
+* `{n}` The preceding item is matched exactly n times.
+* `{n,}` The preceding item is matched n or more times.
+* `{n,m}` The preceding item is matched at least n times, but not more than m times.
+
+__Practice:__ Start with the even larger `bnamesearly` and find all name where there is an "e" followed by 1 or 2 "z"s.  You results should look like this: 
+
+```{r, echo=FALSE}
+bnamesearly %>% str_subset("ez{1,2}")
+```
+
+```{r num-match, exercise=TRUE}
+bnamesearly %>% str_subset("ez{1,2}")
+```
+
+## Regular Expressions, part 2
+
+### Character sets
+
+If we want to match any of a particular set of characters we can include the group in `[]`.
+
+__Practice:__ Experiment with `[]` to find all names in the `bnames100` list that start with a vowel (you should find 19):
+
+```{r brackets, exercise=TRUE}
+bnames100 %>% str_subset("[]")
+```
+
+You can also specify ranges using "-" so that `[0-5]` matches numbers from 0 to 5 and `[j-n]` matches j, k, l, m, or n, `[A-Z]` is all capital letters, etc.  There are also some predefined classes but generally I do not recommend using them because the definitions change depending on your locale.
+
+### Or
+
+Somewhat related is the `|` character that serves as an or:
+
+```{r jj1, exercise=TRUE}
+bnamesall %>% str_subset("Jack|Jill") %>% head(15)
+```
+
+Parentheses are used to indicate the boundaries of the or statement.  Compare the following two code chunks:
+
+No parentheses:
+```{r jj2, exercise=TRUE}
+bnamesall %>% str_subset("Jack|Jilly") 
+```
+
+With parentheses:
+```{r jj3, exercise=TRUE}
+bnamesall %>% str_subset("(Jack|Jill)y") 
+```
+
+Why are these last two different?  The first returns all names that contain "Jack" or "Jilly", whereas the second returns all names that contain "Jacky" or "Jilly".  
+
+__Practice:__ The object `fruit` contains 80 fruit names.  
+
+__1)__ Find all of those that contain "berry" or "pepper.
+
+```{r bp1, exercise=TRUE}
+fruit %>% str_subset("") 
+```
+
+__2)__ Find all fruit names that have a space " " preceding "berry" or "pepper"
+
+```{r bp2, exercise=TRUE}
+fruit %>% str_subset("") 
+```
+
+__3)__ Find all fruit names that contain "berry" or "pepper" but that do NOT have a preceding space 
+
+```{r bp3, exercise=TRUE}
+fruit %>% str_subset("") 
+```
+
+## Regular Expressions, part 3
+
+Earlier you were asked to find all names that start with a vowel.  This was relatively easy because the first letter of the `bnames` list is capitalized. But what if you wanted all fruit that started with a vowel?  Luckily we can specify the beginning of a string with `^` and the end of a string with `$`.
+
+__Practice:__ Use this information to find all fruit that start with a vowel:
+
+```{r fruitvowel1, exercise=TRUE}
+fruit %>% str_subset("") 
+```
+
+__Practice:__ Now try finding all fruit that start AND end with a vowel.
+
+```{r fruitvowel2, exercise=TRUE}
+fruit %>% str_subset("") 
+```
+
+__Practice:__ How about all fruit that start OR end with a vowel?
+
+```{r fruitvowel3, exercise=TRUE}
+fruit %>% str_subset("") 
+```
+
+## More `str_` functions
+
+### Removing matches
+`str_remove` removes the (first) match of the pattern and returns the rest of the string; `str_remove_all()` removes all occurrences of it..
+
+To try this, try removing the first lowercase vowel and then all lowercase vowels from `bnames10`
+
+
+```{r stremove, exercise=TRUE}
+bnames10 %>% 
+```
+
+### Replacing matches
+`str_replace()` and `str_replace_all()` will replace the match with a different string.  If we want to capitalize berry:
+
+```{r strreplace1, exercise=TRUE}
+fruit %>% str_replace("berry", "BERRY")
+```
+
+## Back references
+
+You have already seen that parentheses can be used to clarify the order of search operations (e.g. "(Jack|Jill)y" ).  They can also define a group of matched characters that can be referred to subsequently in the search string or in a replace statement.  For example, if we want to find all names with pairs of characters:
+
+```{r back1, exercise=TRUE}
+fruit %>% str_view("(..)\\1", match = TRUE)
+```
+
+What is going on here?  the `..` matched any two characters.  Since `..` is enclosed in parentheses that defines a group and `\\1` refers back to the group.
+
+__Practice:__  Try it!  Find all names in bnames100 that begin and end with the same character.  To make it simpler we will convert to lowercase first.
+
+```{r back2, exercise=TRUE}
+bnames100 %>% tolower() %>% 
+```
+
+## Resources and final words
+
+Regular expression are very powerful.  They also take a lot of practice before they become intuitive.  The payoff is worth it.
+
+A few helpful resources:
+
+[stringr and regular expression cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/strings.pdf)
+
+[Interactive visualization in R using regexplain](https://www.garrickadenbuie.com/project/regexplain/)
+
