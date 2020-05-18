@@ -8,7 +8,6 @@ output:
 runtime: shiny_prerendered
 ---
 
-
 ```{r, eval=FALSE, include=FALSE}
 # this was used to set up the data sets.
 library(babynames)
@@ -18,6 +17,11 @@ bnames10 <- sample(bnamesearly, 10)
 bnames100 <- sample(bnamesearly, 100)
 bnames1000 <- sample(bnamesearly, 1000)
 bnamesall <- babynames$name %>% unique()
+rev_words <- words %>% str_replace("^(.)(.*)(.)$", "\\3\\2\\1")
+mywords <- words[words%in%rev_words]
+mywords <- mywords[-1] %>% str_subset("^(.).*\\1$", negate = TRUE)
+mywords <- mywords[c(1,2,3,6)]
+rm(rev_words)
 save.image(file="www/bnames.Rdata")
 ```
 
@@ -290,6 +294,70 @@ __Practice:__  Try it!  Find all names in bnames100 that begin and end with the 
 
 ```{r back2, exercise=TRUE}
 bnames100 %>% tolower() %>% 
+```
+
+You can define multiple match groups with separate sets of parentheses and back reference each one, the first group is `\\1`, the second one is `\\2` and so forth.  So if we wanted to swap the first and last letters of these words:
+
+```{r}
+mywords
+```
+
+
+```{r back3, exercise=TRUE}
+str_replace(mywords, "^(.)(.*)(.)$", "\\3\\2\\1")
+```
+
+__Stop and Think:__ What does each term in the regular expression match?  How does this reverse the first and last characters?
+
+## Mutate
+
+All of these functions can be used with `mutate()` to transform columns of a dataframe or tibble.  Consider this list of names:
+
+```{r, echo=FALSE}
+names <- tibble(full_name=c("Maloof, Julin", "Davis, John", "Harmer, Stacey", "Harada, John", "Britt, Anne", "Brady, Siobhan", "Liu, Bo", "Sinha, Neelima", "Ledford, Joel"))
+names
+```
+
+We can use `mutate()` to create a new column with just the first name:
+
+```{r mut1, exercise=TRUE}
+names %>%
+  mutate(first_name=str_remove(full_name, ".*, "))
+```
+
+__Practice: __ Create a column with the last names.
+
+```{r mut2, exercise=TRUE}
+names %>%
+  mutate(last_name=)
+```
+
+An alternative approach using `mutate()` and `str_replace()`:
+
+```{r mut3, exercise=TRUE}
+names %>%
+  mutate(first_name=str_replace(full_name, ".*, (.*)", "\\1"))
+```
+
+__Stop and Think:__ In your own words explain the regular expressions above and how they work.
+
+__Practice:__ Use `mutate()` and `str_replace()` to create a column with last names.
+
+```{r mut4, exercise=TRUE}
+names %>%
+  mutate(last_name=)
+```
+
+__Practice:__ Use `mutate()` and `str_replace()` to create a column with the first name followed by the last name.  Your result should look like this:
+
+```{r, echo=FALSE}
+names %>%
+  mutate(first_last=str_replace(full_name, "(.*), (.*)", "\\2 \\1"))
+```
+
+```{r mut5, exercise=TRUE}
+names %>%
+  mutate(last_name=)
 ```
 
 ## Resources and final words
