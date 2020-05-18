@@ -99,7 +99,7 @@ __Practice:__ keep names that contain "th"
 
 ```
 
-## Extract part of a string with `str_extract()`
+## Extract matches with `str_extract()`
 
 If we want to extract the matching part of the string, we can use `str_extract()`
 
