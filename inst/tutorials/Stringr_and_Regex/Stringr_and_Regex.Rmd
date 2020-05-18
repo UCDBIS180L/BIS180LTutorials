@@ -17,6 +17,7 @@ bnames10 <- sample(bnamesearly, 10)
 bnames100 <- sample(bnamesearly, 100)
 bnames1000 <- sample(bnamesearly, 1000)
 bnamesall <- babynames$name %>% unique()
+knames <- bnamesearly %>% str_subset("Kat")
 rev_words <- words %>% str_replace("^(.)(.*)(.)$", "\\3\\2\\1")
 mywords <- words[words%in%rev_words]
 mywords <- mywords[-1] %>% str_subset("^(.).*\\1$", negate = TRUE)
@@ -29,9 +30,11 @@ save.image(file="www/bnames.Rdata")
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(gradethis)
 library(tidyverse)
 load("www/bnames.Rdata")
 knitr::opts_chunk$set(echo = FALSE)
+tutorial_options(exercise.checker = gradethis::grade_learnr)
 ```
 
 
@@ -62,18 +65,18 @@ bnames10
 
 Run the code below to search for names that contain "a":
 
-```{r str-detect-1, exercise=TRUE}
+```{r str_detect_1, exercise=TRUE}
 bnames10 %>% str_detect("a")
 ```
 
 `str_view()` performs a similar task but creates a visualization rather than returning output:
 
-```{r str-detect-1view, exercise=TRUE}
+```{r str_detect_1view, exercise=TRUE}
 bnames10 %>% str_view("a")
 ```
 
 __Question:__
-```{r str-detect-q, echo=FALSE}
+```{r str_detect_q, echo=FALSE}
 question("Is str_detect() case sensitive?",
   answer("Yes", correct = TRUE),
   answer("No")
@@ -81,36 +84,51 @@ question("Is str_detect() case sensitive?",
 ```
 
 __Practice:__ Use str_detect to detect names with "A".
-```{r str-detect-ex-2, exercise=TRUE}
-
+```{r str_detect_ex_2, exercise=TRUE}
+bnames10 %>%
 ```
 
+```{r str_detect_ex_2-check}
+.answer <- bnames10 %>% str_detect("A")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
+```
 ## Subset strings with `str_subset()`
 
 If we want to only retain those strings that match our pattern, we use `str_subset()`.
 
 Run the code below to retain names that contain "a":
 
-```{r str-subset-1, exercise=TRUE}
+```{r str_subset_1, exercise=TRUE}
 bnames10 %>% str_subset("a")
 ```
 
 __Practice:__ keep names that contain "th"
-```{r str-subset-ex-1, exercise=TRUE}
+```{r str_subset_ex_1, exercise=TRUE}
 
+```
+
+```{r str_subset_ex_2-check}
+.answer <- bnames10 %>% str_subset("th")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
 ```
 
 ## Extract matches with `str_extract()`
 
 If we want to extract the matching part of the string, we can use `str_extract()`
 
-```{r str-extract-1, exercise=TRUE}
+```{r str_extract_1, exercise=TRUE}
 bnames10 %>% str_extract("a")
 ```
 
 __Practice:__ Go ahead and try it, with the pattern of your choice.
 
-```{r str-extract-2, exercise=TRUE}
+```{r str_extract_2, exercise=TRUE}
 
 ```
 
@@ -182,10 +200,17 @@ __Practice:__ Start with the even larger `bnamesearly` and find all name where t
 bnamesearly %>% str_subset("ez{1,2}")
 ```
 
-```{r num-match, exercise=TRUE}
+```{r num_match, exercise=TRUE}
 bnamesearly %>% str_subset("")
 ```
 
+```{r num_match-check}
+.answer <- bnamesearly %>% str_subset("ez{1,2}")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
+```
 ## Regular Expressions, part 2
 
 ### Character sets
@@ -198,12 +223,28 @@ __Practice:__ Experiment with `[]` to find all names in the `bnames100` list tha
 bnames100 %>% str_subset("[]")
 ```
 
+```{r brackets-check}
+.answer <- bnames100 %>% str_subset("[AEIOU]")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
+```
+
 We can also use character sets to exclude a particular set of characters by placing a `^` as the first character in our brackets `[^]`.
 
 __Practice:__ Experiment with `[^]` to find all letters in the `letters` that are not vowels. (You should find 21):
 
 ```{r brackets2, exercise=TRUE}
 letters %>% str_subset("[^]")
+```
+
+```{r brackets2-check}
+.answer <- letters %>% str_subset("[^aeiou]")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
 ```
 
 You can also specify ranges using "-" so that `[0-5]` matches numbers from 0 to 5 and `[j-n]` matches j, k, l, m, or n, `[A-Z]` is all capital letters, etc.  There are also some predefined classes but generally I do not recommend using them because the definitions change depending on your locale.
@@ -232,10 +273,18 @@ Why are these last two different?  The first returns all names that contain "Jac
 
 __Practice:__ The object `fruit` contains 80 fruit names.  
 
-__1)__ Find all of those that contain "berry" or "pepper. (There will be 16)
+__1)__ Find all of those that contain "berry" or "pepper". (There will be 16)
 
 ```{r bp1, exercise=TRUE}
 fruit %>% str_subset("") 
+```
+
+```{r bp1-check}
+.answer <- fruit %>% str_subset("(berry|pepper)")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
 ```
 
 __2)__ Find all fruit names that have a space " " preceding "berry" or "pepper". (There will be 4)
@@ -244,10 +293,26 @@ __2)__ Find all fruit names that have a space " " preceding "berry" or "pepper".
 fruit %>% str_subset("") 
 ```
 
+```{r bp2-check}
+.answer <- fruit %>% str_subset(" (berry|pepper)")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
+```
+
 __3)__ Find all fruit names that contain "berry" or "pepper" but that do NOT have a preceding space. (There will be 12)
 
 ```{r bp3, exercise=TRUE}
 fruit %>% str_subset("") 
+```
+
+```{r bp3-check}
+.answer <- fruit %>% str_subset("[^ ](berry|pepper)")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
 ```
 
 ## Regular Expressions, part 3
@@ -260,11 +325,27 @@ __Practice:__ Use this information to find all fruit that start with a vowel: (T
 fruit %>% str_subset("") 
 ```
 
+```{r fruitvowel1-check}
+.answer <- fruit %>% str_subset("^[aeiou]")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
+```
+
 __Practice:__ Now try finding all fruit that start AND end with a vowel. (There will be 4)  
-_Hint: You will need to find some way to do with the letters in the middle of the words_
+_Hint: You will need to find some way to deal with the letters in the middle of the words_
 
 ```{r fruitvowel2, exercise=TRUE}
 fruit %>% str_subset("") 
+```
+
+```{r fruitvowel2-check}
+.answer <- fruit %>% str_subset("^[aeiou].*[aeiou]$")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
 ```
 
 __Practice:__ How about all fruit that start __OR__ end with a vowel? (There will be 32)
@@ -273,31 +354,72 @@ __Practice:__ How about all fruit that start __OR__ end with a vowel? (There wil
 fruit %>% str_subset("") 
 ```
 
+```{r fruitvowel3-check}
+.answer <- fruit %>% str_subset("^[aeiou]|[aeiou]$")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
+```
+
 ## More `str_` functions
 
 ### Removing matches
 `str_remove` removes the (first) match of the pattern and returns the rest of the string; `str_remove_all()` removes all occurrences of it.
 
-Try removing the first lowercase vowel from `bnames10`
+Try removing the first lowercase vowel from each item in `bnames10`
 
-
-```{r stremove, exercise=TRUE}
+```{r str_remove, exercise=TRUE}
 bnames10 %>% 
+```
+
+```{r str_remove-check}
+.answer <- bnames10 %>% str_remove("[aeiou]")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
 ```
 
 Now try removing  all lowercase vowels from `bnames10`
 
-```{r stremove2, exercise=TRUE}
+```{r str_remove2, exercise=TRUE}
 bnames10 %>% 
+```
+
+```{r str_remove2-check}
+.answer <- bnames10 %>% str_remove_all("[aeiou]")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
 ```
 
 ### Replacing matches
 `str_replace()` and `str_replace_all()` will replace the match with a different string.  If we want to capitalize berry:
 
-```{r strreplace1, exercise=TRUE}
+```{r str_replace1, exercise=TRUE}
 fruit %>% str_replace("berry", "BERRY")
 ```
 
+`knames` contains names that start with "Kat".  Often there are similar names that start with "C".  Use str_replace to convert these knames to their "C" equivalent.
+
+```{r, echo=TRUE}
+knames
+```
+
+
+```{r str_replace2, exercise=TRUE}
+knames %>% 
+```
+
+```{r str_replace2-check}
+.answer <- knames %>% str_replace("K", "C")
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+)
+```
 ## Back references
 
 You have already seen that parentheses can be used to clarify the order of search operations (e.g. "(Jack|Jill)y" ).  They can also define a group of matched characters that can be referred to subsequently in the search string or in a replace statement.  For example, if we want to find all names with pairs of characters:
@@ -308,10 +430,20 @@ fruit %>% str_view("(..)\\1", match = TRUE)
 
 What is going on here?  the `..` matched any two characters.  Since `..` is enclosed in parentheses that defines a group and `\\1` refers back to the group.
 
-__Practice:__  Try it!  Find all names in bnames100 that begin and end with the same character.  To make it simpler we will convert to lowercase first.
+__Practice:__  Try it!  Find all names in `bnames100` that begin and end with the same character.  To make it simpler we will convert to lowercase first.  You may want to use `str_view()` as you work on your pattern, but use `str_subset()` when you are ready to submit your answer.
 
 ```{r back2, exercise=TRUE}
 bnames100 %>% tolower() %>% 
+```
+
+```{r back2-check}
+.answer <- bnames100 %>% tolower() %>% str_subset("^(.).*\\1$")
+.wrong <- bnames100 %>% tolower() %>% str_subset("(.).*\\1")
+
+grade_result(
+  pass_if(~identical(.result,  .answer)),
+  fail_if(~identical(.result, .wrong), "Nice try but maybe you forgot to specify the start and end of the string")
+  )
 ```
 
 You can define multiple match groups with separate sets of parentheses and back reference each one, the first group is `\\1`, the second one is `\\2` and so forth.  So if we wanted to swap the first and last letters of these words:
