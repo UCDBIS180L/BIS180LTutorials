@@ -111,7 +111,7 @@ __Practice:__ keep names that contain "th"
 
 ```
 
-```{r str_subset_ex_2-check}
+```{r str_subset_ex_1-check}
 .answer <- bnames10 %>% str_subset("th")
 
 grade_result(
