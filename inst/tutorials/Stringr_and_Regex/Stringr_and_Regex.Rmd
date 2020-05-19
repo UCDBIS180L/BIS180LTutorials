@@ -4,7 +4,7 @@ tutorial:
   version: 1.0
 output: 
   learnr::tutorial:
-    progressive: false # because of problems on symposium
+    progressive: true # because of problems on symposium
 runtime: shiny_prerendered
 ---
 
