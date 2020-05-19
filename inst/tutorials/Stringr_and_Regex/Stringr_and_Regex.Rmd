@@ -481,6 +481,14 @@ people %>%
   mutate(last_name=)
 ```
 
+```{r mut2-check}
+.answer <- people %>% mutate(last_name=str_remove(full_name, ", .*"))
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+  )
+```
+
 An alternative approach using `mutate()` and `str_replace()`:
 
 ```{r mut3, exercise=TRUE}
@@ -509,13 +517,25 @@ people %>%
   mutate(first_last=)
 ```
 
+```{r mut5-check}
+.answer <- people %>% mutate(first_last=str_replace(full_name, "(.*), (.*)", "\\2 \\1"))
+
+grade_result(
+  pass_if(~identical(.result,  .answer))
+  )
+```
+
 ## Resources and final words
 
 Regular expression are very powerful.  They also take a lot of practice before they become intuitive.  The payoff is worth it.
 
 A few helpful resources:
 
-[stringr and regular expression cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/strings.pdf)
+1. I made a short video on regexplain, an Rstudio plugin that will make visualizing regular expressions much easier.  __[watch it here](https://video.ucdavis.edu/media/BI180L+RegExplain/0_peoxes9u)__
+2. [Interactive visualization in R using regexplain](https://www.garrickadenbuie.com/project/regexplain/)
+3. [stringr and regular expression __cheatsheet__](https://github.com/rstudio/cheatsheets/raw/master/strings.pdf)
 
-[Interactive visualization in R using regexplain](https://www.garrickadenbuie.com/project/regexplain/)
+
+
+
 
