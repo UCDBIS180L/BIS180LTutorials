@@ -4,7 +4,7 @@ tutorial:
   version: 1.0
 output: 
   learnr::tutorial:
-    progressive: true
+    progressive: false # because of problems on symposium
 runtime: shiny_prerendered
 ---
 
@@ -75,8 +75,9 @@ bnames10 %>% str_detect("a")
 bnames10 %>% str_view("a")
 ```
 
-__Question:__
-```{r str_detect_q, echo=FALSE}
+__Question:__ Is str_detect() case sensitive?
+```{r str_detect_q, echo=FALSE, eval=FALSE}
+#This is eval=FALSE because of symposium problems
 question("Is str_detect() case sensitive?",
   answer("Yes", correct = TRUE),
   answer("No")
