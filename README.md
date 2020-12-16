@@ -6,8 +6,11 @@ There are currently four tutorials:
 
 * "Tidyverse_Introduction" introduces concepts and tools important for using [tidyverse](https://www.tidyverse.org/) packages.
 * "ggplot" teaches basic [ggplot2](https://ggplot2.tidyverse.org/) plotting skills
-* "Gather_And_Spread" focuses on converting data between long and wide formats
+* "Gather_And_Spread" focuses on converting data between long and wide formats (deprecated, use Pivot)
+* "Pivot" focuses on converting data between long and wide formats
 * "Joins" illustrates how to join multiple data frames based on shared keys
+* "Stringr_and_Regex" Introduced regular expressions and string manipulation with the stringr package.
+
 
 ## Installing the tutorials
 
