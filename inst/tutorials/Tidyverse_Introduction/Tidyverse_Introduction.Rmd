@@ -270,21 +270,36 @@ hyp.summary <- tomato %>%
 hyp.summary
 ```
 
-Your turn...
-
-calculate the median altitude of each species, then pipe the results into arrange to sort by altitude.  Which species comes from the highest altitude?
+We can take advantage of the fact that TRUE is equivalent to 1 and FALSE to 0 to quickly count the number if items that meet some criteria.  If we want to know the number of hypocotyl measurements greater than 30mm for each species:
 
 ```{r summarize5, exercise=TRUE}
-
+tomato %>%
+  group_by(species) %>%
+  summarize(`Total hyp measurements`=n(),
+            `Hyp measurements > 30`=sum(hyp>30))
 ```
 
-calculate the number of measurements made by each researcher for each species.
+
+Your turn...
+
+Calculate the median altitude of each species, then pipe the results into arrange to sort by altitude.  Which species comes from the highest altitude?
 
 ```{r summarize6, exercise=TRUE}
 
 ```
 
-Who worked harder?
+Who worked harder in this experiment? Calculate the number of measurements made by each researcher for each species.
+
+```{r summarize7, exercise=TRUE}
+
+```
+
+The column `leafnum` gives information on the leaf that was measured (leaf 1 is the oldest and is at the bottom of the plant).  For each species and treatment combination, calculate the percentage of leaf measurements that come from leaf 6. _Self check: S. Chilense H should be 31.37255`
+
+```{r summarize8, exercise=TRUE}
+
+```
+
 
 
 ## End
