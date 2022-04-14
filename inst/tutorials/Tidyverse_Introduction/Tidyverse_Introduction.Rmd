@@ -300,7 +300,26 @@ The column `leafnum` gives information on the leaf that was measured (leaf 1 is 
 
 ```
 
+## Use `slice()` to slice up your data
 
+The `slice()` set of functions allows you to subset your data by ranked position.  There are several related functions, here we will just work with `slice_min()` and `slice_max()`.
+
+`slice_min()` will order the rows by the column that you specify and keep the rows with the  `n` smallest values.
+
+To keep the rows with the 5 shortest hypocotyl measurements:
+```{r slice1, exercise=TRUE}
+tomato %>%
+  slice_min(order_by = hyp,
+            n=5)
+```
+You can also combine with `group_by()` to return `n` rows per group.
+
+Your turn: use `group_by()` and `slice_max()` to return the row with the longest hypocotyl for each species and trt combination.  Combine this with another command that you learned earlier in this tutorial to only keep the columns "species", "acs", "trt" and "hyp"
+
+```{r slice2, exercise=TRUE}
+
+```
+The result should be a table of 10 rows and for columns.  The first row should be `S. chilense	LA1958	H	65.32`
 
 ## End
 
