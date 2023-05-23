@@ -4,7 +4,7 @@ tutorial:
   version: 1.2
 output: 
   learnr::tutorial:
-    progressive: true
+    progressive: false
 runtime: shiny_prerendered
 ---
 
@@ -221,7 +221,7 @@ Make a scatter plot of int3 vs int4 as you have before, but this time add a tren
 
 ```
 
-```{r layer-quiz}
+```{r layer-quiz, eval=FALSE}
 quiz(
   question("Does the order of geom_smooth and geom_point matter in the final output of the plot? Try different orders and then chose the correct answer",
     answer("Yes, the order that the geoms are given determines the order in which they are layered on the plot.  The first geom listed is plotted FIRST and subsequent geoms are plotted on top of that.", correct = TRUE),
@@ -282,7 +282,7 @@ tomato %>% ggplot(aes(x=species, y=hyp)) +
 
 In a boxplot the horizontal line represents the median.  Look at the help for geom_boxplot to determine what other components represent:
 
-```{r quiz}
+```{r quiz, eval=FALSE}
 quiz(
   question("What does the 'box' represent?",
     answer("the mean +/- the standard error of the mean"),
