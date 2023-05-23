@@ -534,7 +534,7 @@ A few helpful resources:
 
 1. I made a short video on regexplain, an Rstudio plugin that will make visualizing regular expressions much easier.  __[watch it here](https://video.ucdavis.edu/media/BI180L+RegExplain/0_peoxes9u)__
 2. [Interactive visualization in R using regexplain](https://www.garrickadenbuie.com/project/regexplain/)
-3. [stringr and regular expression __cheatsheet__](https://github.com/rstudio/cheatsheets/raw/master/strings.pdf)
+3. [stringr and regular expression __cheatsheet__](https://github.com/rstudio/cheatsheets/blob/main/strings.pdf)
 
 
 
