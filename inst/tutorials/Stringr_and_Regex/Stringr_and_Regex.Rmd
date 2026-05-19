@@ -31,6 +31,7 @@ save.image(file="www/bnames.Rdata")
 ```{r setup, include=FALSE}
 library(learnr)
 library(gradethis)
+gradethis_setup()
 library(tidyverse)
 load("www/bnames.Rdata")
 knitr::opts_chunk$set(echo = FALSE)
@@ -90,10 +91,8 @@ bnames10 %>%
 ```
 
 ```{r str_detect_ex_2-check}
-.answer <- bnames10 %>% str_detect("A")
-
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {bnames10 %>% str_detect("A")}))
 )
 ```
 ## Subset strings with `str_subset()`
@@ -112,10 +111,9 @@ __Practice:__ keep names that contain "th"
 ```
 
 ```{r str_subset_ex_1-check}
-.answer <- bnames10 %>% str_subset("th")
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {bnames10 %>% str_subset("th")}))
 )
 ```
 
@@ -206,10 +204,9 @@ bnamesearly %>% str_subset("")
 ```
 
 ```{r num_match-check}
-.answer <- bnamesearly %>% str_subset("ez{1,2}")
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {bnamesearly %>% str_subset("ez{1,2}")}))
 )
 ```
 ## Regular Expressions, part 2
@@ -225,10 +222,9 @@ bnames100 %>% str_subset("[]")
 ```
 
 ```{r brackets-check}
-.answer <- bnames100 %>% str_subset("[AEIOU]")
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result, {bnames100 %>% str_subset("[AEIOU]")}))
 )
 ```
 
@@ -241,10 +237,8 @@ letters %>% str_subset("[^]")
 ```
 
 ```{r brackets2-check}
-.answer <- letters %>% str_subset("[^aeiou]")
-
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {letters %>% str_subset("[^aeiou]")}))
 )
 ```
 
@@ -281,10 +275,8 @@ fruit %>% str_subset("")
 ```
 
 ```{r bp1-check}
-.answer <- fruit %>% str_subset("(berry|pepper)")
-
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {fruit %>% str_subset("(berry|pepper)")}))
 )
 ```
 
@@ -295,10 +287,9 @@ fruit %>% str_subset("")
 ```
 
 ```{r bp2-check}
-.answer <- fruit %>% str_subset(" (berry|pepper)")
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {fruit %>% str_subset(" (berry|pepper)")}))
 )
 ```
 
@@ -309,10 +300,8 @@ fruit %>% str_subset("")
 ```
 
 ```{r bp3-check}
-.answer <- fruit %>% str_subset("[^ ](berry|pepper)")
-
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {fruit %>% str_subset("[^ ](berry|pepper)")}))
 )
 ```
 
@@ -327,10 +316,9 @@ fruit %>% str_subset("")
 ```
 
 ```{r fruitvowel1-check}
-.answer <- fruit %>% str_subset("^[aeiou]")
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {fruit %>% str_subset("^[aeiou]")}))
 )
 ```
 
@@ -342,10 +330,9 @@ fruit %>% str_subset("")
 ```
 
 ```{r fruitvowel2-check}
-.answer <- fruit %>% str_subset("^[aeiou].*[aeiou]$")
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result, {fruit %>% str_subset("^[aeiou].*[aeiou]$")}))
 )
 ```
 
@@ -356,10 +343,9 @@ fruit %>% str_subset("")
 ```
 
 ```{r fruitvowel3-check}
-.answer <- fruit %>% str_subset("^[aeiou]|[aeiou]$")
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {fruit %>% str_subset("^[aeiou]|[aeiou]$")}))
 )
 ```
 
@@ -375,10 +361,9 @@ bnames10 %>%
 ```
 
 ```{r str_remove-check}
-.answer <- bnames10 %>% str_remove("[aeiou]")
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {bnames10 %>% str_remove("[aeiou]")}))
 )
 ```
 
@@ -389,10 +374,9 @@ bnames10 %>%
 ```
 
 ```{r str_remove2-check}
-.answer <- bnames10 %>% str_remove_all("[aeiou]")
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {bnames10 %>% str_remove_all("[aeiou]")}))
 )
 ```
 
@@ -415,10 +399,9 @@ knames %>%
 ```
 
 ```{r str_replace2-check}
-.answer <- knames %>% str_replace("K", "C")
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {knames %>% str_replace("K", "C")}))
 )
 ```
 ## Back references
@@ -438,12 +421,10 @@ bnames100 %>% tolower() %>%
 ```
 
 ```{r back2-check}
-.answer <- bnames100 %>% tolower() %>% str_subset("^(.).*\\1$")
-.wrong <- bnames100 %>% tolower() %>% str_subset("(.).*\\1")
 
 grade_result(
-  pass_if(~identical(.result,  .answer)),
-  fail_if(~identical(.result, .wrong), "Nice try but maybe you forgot to specify the start and end of the string")
+  pass_if(~identical(.result,  {bnames100 %>% tolower() %>% str_subset("^(.).*\\1$")})),
+  fail_if(~identical(.result, {bnames100 %>% tolower() %>% str_subset("(.).*\\1")}), "Nice try but maybe you forgot to specify the start and end of the string")
   )
 ```
 
@@ -483,10 +464,9 @@ people %>%
 ```
 
 ```{r mut2-check}
-.answer <- people %>% mutate(last_name=str_remove(full_name, ", .*"))
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  {people %>% mutate(last_name=str_remove(full_name, ", .*"))}))
   )
 ```
 
@@ -519,10 +499,9 @@ people %>%
 ```
 
 ```{r mut5-check}
-.answer <- people %>% mutate(first_last=str_replace(full_name, "(.*), (.*)", "\\2 \\1"))
 
 grade_result(
-  pass_if(~identical(.result,  .answer))
+  pass_if(~identical(.result,  { people %>% mutate(first_last=str_replace(full_name, "(.*), (.*)", "\\2 \\1"))}))
   )
 ```
 
